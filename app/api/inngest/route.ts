@@ -9,3 +9,4 @@ export const { GET, POST, PUT } = serve({
    deleteUserOnClerkDelete
   ],
 });
+console.log("🔑 Signing Key:", process.env.INNGEST_SIGNING_KEY);
