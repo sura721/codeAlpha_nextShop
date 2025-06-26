@@ -4,7 +4,6 @@ export const inngest = new Inngest({ id: "nextShop" });
 
 
 
-
 // creating addUser function
 
 export const syncUserOnCreate = inngest.createFunction(
@@ -32,5 +31,34 @@ export const syncUserOnCreate = inngest.createFunction(
       message: `User synced successfully`,
       userId: user.id,
     };
+  }
+);
+
+
+// user deletetion
+
+
+
+
+export const deleteUserOnClerkDelete = inngest.createFunction(
+  { id: "delete-user-on-clerk-delete", name: "Delete User on Clerk Delete" },
+  { event: "clerk/user.deleted" },
+  async ({ event, step }) => {
+    const { clerkId } = event.data;
+
+    const deletedUser = await step.run("delete-user-from-db", async () => {
+      const result = await prisma.user.deleteMany({
+        where: {
+          clerkId: clerkId,
+        },
+      });
+      return result;
+    });
+
+    if (deletedUser.count === 0) {
+      return { message: "User not found in DB, nothing to delete." };
+    }
+
+    return { message: `User with Clerk ID ${clerkId} deleted successfully.` };
   }
 );
