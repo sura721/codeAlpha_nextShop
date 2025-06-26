@@ -5,30 +5,24 @@ export const inngest = new Inngest({ id: "nextShop" });
 
 
 // creating addUser function
-
 export const syncUserOnCreate = inngest.createFunction(
   { id: "sync-user-on-create", name: "Sync User on Create" },
   { event: "clerk/user.created" },
   async ({ event, step }) => {
-    const { clerkId, email, name } = event.data;
+    const clerkId = event.data.id;
+    const email = event.data.email_addresses?.[0]?.email_address ?? "";
+    const name = event.data.first_name ?? "";
 
     const user = await step.run("sync-user-to-db", async () => {
       return await prisma.user.upsert({
-        where: { clerkId: clerkId },
-        update: {
-          email: email,
-          name: name,
-        },
-        create: {
-          clerkId: clerkId,
-          email: email,
-          name: name,
-        },
+        where: { clerkId },
+        update: { email, name },
+        create: { clerkId, email, name },
       });
     });
 
     return {
-      message: `User synced successfully`,
+      message: "User synced successfully",
       userId: user.id,
     };
   }
