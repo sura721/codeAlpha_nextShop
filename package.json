@@ -1,13 +1,14 @@
 {
   "name": "nextshop",
   "version": "0.1.0",
-  "private": true,"scripts": {
-  "dev": "next dev",
-  "build": "prisma generate && next build",
-  "start": "next start",
-  "lint": "next lint",
-  "inngest:dev": "inngest-cli dev"
-},
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "inngest:dev": "inngest-cli dev"
+  },
   "dependencies": {
     "@clerk/nextjs": "^6.23.0",
     "@prisma/client": "^6.10.1",
