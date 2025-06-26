@@ -5,7 +5,7 @@ export const inngest = new Inngest({ id: "nextShop" });
 
 
 
-// creating user
+// creating addUser function
 
 export const syncUserOnCreate = inngest.createFunction(
   { id: "sync-user-on-create", name: "Sync User on Create" },
