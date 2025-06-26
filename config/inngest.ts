@@ -36,7 +36,7 @@ export const syncUserOnCreate = inngest.createFunction(
 
 export const deleteUserOnClerkDelete = inngest.createFunction(
   { id: "delete-user-on-clerk-delete", name: "Delete User on Clerk Delete" },
-  { event: "clerk/user.deleted" },
+  { event: "user.deleted" },
   async ({ event, step }) => {
     const { clerkId } = event.data;
 
