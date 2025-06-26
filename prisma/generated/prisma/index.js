@@ -189,6 +189,10 @@ const config = {
         "fromEnvVar": null,
         "value": "debian-openssl-3.0.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -215,8 +219,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../prisma/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  clerkId   String   @unique\n  email     String\n  name      String?\n  admin     Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  orders  Order[]\n  reviews Review[]\n}\n\nmodel Product {\n  id          String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  title       String\n  slug        String      @unique\n  description String\n  price       Float\n  offerPrice  Float?\n  images      String[]\n  inStock     Int\n  category    Category    @relation(fields: [categoryId], references: [id])\n  categoryId  String      @db.ObjectId\n  orderItems  OrderItem[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews Review[]\n}\n\nmodel Category {\n  id       String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name     String\n  slug     String    @unique\n  products Product[]\n}\n\nmodel Order {\n  id     String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user   User        @relation(fields: [userId], references: [id])\n  userId String      @db.ObjectId\n  items  OrderItem[]\n  status OrderStatus @default(PENDING)\n  total  Float\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum OrderStatus {\n  PENDING\n  PROCESSING\n  SHIPPED\n  DELIVERED\n  CANCELLED\n}\n\nmodel OrderItem {\n  id      String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  order   Order   @relation(fields: [orderId], references: [id])\n  orderId String  @db.ObjectId\n  product Product @relation(fields: [productId], references: [id])\n\n  productId String @db.ObjectId\n  quantity  Int\n  price     Float\n}\n\nmodel Review {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user      User     @relation(fields: [userId], references: [id])\n  userId    String   @db.ObjectId\n  product   Product  @relation(fields: [productId], references: [id])\n  productId String   @db.ObjectId\n  rating    Int\n  comment   String\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "567740dd09194725811d650b186ef67e49d5d3fb88224f9badb4a3243430377b",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../prisma/generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  clerkId   String   @unique\n  email     String\n  name      String?\n  admin     Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  orders  Order[]\n  reviews Review[]\n}\n\nmodel Product {\n  id          String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  title       String\n  slug        String      @unique\n  description String\n  price       Float\n  offerPrice  Float?\n  images      String[]\n  inStock     Int\n  category    Category    @relation(fields: [categoryId], references: [id])\n  categoryId  String      @db.ObjectId\n  orderItems  OrderItem[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  reviews Review[]\n}\n\nmodel Category {\n  id       String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name     String\n  slug     String    @unique\n  products Product[]\n}\n\nmodel Order {\n  id     String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user   User        @relation(fields: [userId], references: [id])\n  userId String      @db.ObjectId\n  items  OrderItem[]\n  status OrderStatus @default(PENDING)\n  total  Float\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum OrderStatus {\n  PENDING\n  PROCESSING\n  SHIPPED\n  DELIVERED\n  CANCELLED\n}\n\nmodel OrderItem {\n  id      String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  order   Order   @relation(fields: [orderId], references: [id])\n  orderId String  @db.ObjectId\n  product Product @relation(fields: [productId], references: [id])\n\n  productId String @db.ObjectId\n  quantity  Int\n  price     Float\n}\n\nmodel Review {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user      User     @relation(fields: [userId], references: [id])\n  userId    String   @db.ObjectId\n  product   Product  @relation(fields: [productId], references: [id])\n  productId String   @db.ObjectId\n  rating    Int\n  comment   String\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "4b3f5656d1e644bef36a1416f73f8ed665ac00cdf04c9f7681ba4cd33fdc374f",
   "copyEngine": true
 }
 
@@ -257,6 +261,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process.cwd(), "prisma/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "prisma/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/generated/prisma/schema.prisma")
