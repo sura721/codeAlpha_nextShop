@@ -4,31 +4,6 @@ export const inngest = new Inngest({ id: "nextShop" });
 
 
 
-// creating addUser function
-export const syncUserOnCreate = inngest.createFunction(
-  { id: "sync-user-on-create", name: "Sync User on Create" },
-  { event: "clerk/user.created" },
-  async ({ event, step }) => {
-    const clerkId = event.data.id;
-    const email = event.data.email_addresses?.[0]?.email_address ?? "";
-    const name = event.data.first_name ?? "";
-
-    const user = await step.run("sync-user-to-db", async () => {
-      return await prisma.user.upsert({
-        where: { clerkId },
-        update: { email, name },
-        create: { clerkId, email, name },
-      });
-    });
-
-    return {
-      message: "User synced successfully",
-      userId: user.id,
-    };
-  }
-);
-
-
 // user deletetion
 
 
@@ -36,7 +11,7 @@ export const syncUserOnCreate = inngest.createFunction(
 
 export const deleteUserOnClerkDelete = inngest.createFunction(
   { id: "delete-user-on-clerk-delete", name: "Delete User on Clerk Delete" },
-  { event: "user.deleted" },
+  { event: "clerk/user.deleted" },
   async ({ event, step }) => {
     const { clerkId } = event.data;
 
@@ -54,5 +29,37 @@ export const deleteUserOnClerkDelete = inngest.createFunction(
     }
 
     return { message: `User with Clerk ID ${clerkId} deleted successfully.` };
+  }
+);
+
+
+
+//user deletion
+export const syncUserOnCreate = inngest.createFunction(
+  { id: "sync-user-on-create", name: "Sync User on Create" },
+  { event: "clerk/user.created" },
+  async ({ event, step }) => {
+    console.log("🔥 EVENT:", event); 
+
+    const clerkId = event.data?.id ?? "";
+    const email = event.data?.email_addresses?.[0]?.email_address ?? "";
+    const name = event.data?.first_name ?? "";
+
+    if (!clerkId || !email) {
+      throw new Error("Missing clerkId or email in event data");
+    }
+
+    const user = await step.run("sync-user-to-db", async () => {
+      return await prisma.user.upsert({
+        where: { clerkId },
+        update: { email, name },
+        create: { clerkId, email, name },
+      });
+    });
+
+    return {
+      message: "User synced successfully",
+      userId: user.id,
+    };
   }
 );
