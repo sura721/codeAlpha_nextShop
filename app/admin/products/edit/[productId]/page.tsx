@@ -22,9 +22,14 @@ export default function EditProductPage({ params: paramsPromise }: { params: Pro
         }
         const data = await res.json();
         setProduct(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
+      } catch (err) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError('An unknown error occurred.');
+  }
+}
+finally {
         setLoading(false);
       }
     };

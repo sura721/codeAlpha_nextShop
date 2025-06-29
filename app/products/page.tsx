@@ -3,14 +3,16 @@ import LoadingSkeleton from "@/components/loading-skeleton";
 import { getProducts, getCategories } from "@/lib/actions/product.actions";
 import ProductsIntroSection from "@/components/products-intro-section";
 import ProductFilters from '@/components/products/product-filters';
-import ProductGrid from '@/components/products/product-grid'; // Import the new client component
+import ProductGrid from '@/components/products/product-grid';
 
-// The page is an async Server Component
-export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: { q?: string; category?: string };
-}) {
+// 1️⃣ Update type to Promise pattern
+type ProductsPageProps = {
+  searchParams: Promise<{ q?: string; category?: string }>;
+};
+
+// 2️⃣ Use destructuring with `await` to unwrap promise
+export default async function ProductsPage({ searchParams: searchParamsPromise }: ProductsPageProps) {
+  const searchParams = await searchParamsPromise;
   const categories = await getCategories();
 
   return (
@@ -21,7 +23,6 @@ export default async function ProductsPage({
         <ProductFilters categories={categories} />
 
         <Suspense fallback={<LoadingSkeleton count={8} />}>
-          {/* This new component fetches data and passes it to the client grid */}
           <ProductList searchParams={searchParams} />
         </Suspense>
       </div>
@@ -29,18 +30,15 @@ export default async function ProductsPage({
   );
 }
 
-// This remains a Server Component responsible for data fetching
 async function ProductList({
   searchParams,
 }: {
   searchParams: { q?: string; category?: string };
 }) {
-  // Fetch the products based on the search params
   const filteredProducts = await getProducts({
     query: searchParams.q,
     category: searchParams.category,
   });
 
-  // Render the CLIENT component and pass the fetched data as a prop
   return <ProductGrid products={filteredProducts} />;
 }

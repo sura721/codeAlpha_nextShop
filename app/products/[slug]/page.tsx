@@ -4,9 +4,9 @@ import { getProductBySlug } from "@/lib/actions/product.actions"
 import { notFound } from "next/navigation"
 
 type ProductDetailPageProps = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {

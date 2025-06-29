@@ -4,11 +4,12 @@ import prisma from '@/lib/prisma'; // Adjust path
 // GET a single product for editing
 export async function GET(
   request: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
+  const {productId} = await params
   try {
     const product = await prisma.product.findUnique({
-      where: { id: params.productId },
+      where: { id: productId },
     });
 
     if (!product) {
@@ -25,8 +26,9 @@ export async function GET(
 // PUT (update) a single product
 export async function PUT(
   request: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
+   const { productId } = await params;
   // NOTE: This assumes you have a similar image upload handler as your create endpoint
   // A real implementation would need to handle image replacement/deletion logic carefully
   const formData = await request.formData();
@@ -42,7 +44,7 @@ export async function PUT(
   
   try {
     const updatedProduct = await prisma.product.update({
-      where: { id: params.productId },
+      where: { id:productId },
       data: {
         title,
         slug: title.toLowerCase().replace(/\s+/g, '-'),
