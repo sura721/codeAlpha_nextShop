@@ -34,7 +34,7 @@ export const deleteUserOnClerkDelete = inngest.createFunction(
 
 
 
-//user deletion
+//creating user
 export const syncUserOnCreate = inngest.createFunction(
   { id: "sync-user-on-create", name: "Sync User on Create" },
   { event: "clerk/user.created" },
