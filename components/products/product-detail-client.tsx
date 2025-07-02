@@ -1,140 +1,244 @@
-// components/products/product-detail-client.tsx
 "use client"
 
-import { useState, useTransition } from "react"
-import { motion } from "framer-motion"
+import { useState, useTransition, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ShoppingCart, Heart, Star, Truck, Shield, RotateCcw } from "lucide-react"
-import type { ProductWithDetails } from "@/lib/types"
+import Link from "next/link"
+import { ShoppingCart, Star, CheckCircle, ChevronDown } from "lucide-react"
+import { ProductWithDetails } from "@/lib/types"
 import { useCart } from "@/contexts/cart-context"
+import { clsx } from "clsx"
+
+// Helper functions (getSwatchColor, AccordionItem) remain the same...
+const getSwatchColor = (variantName: string): string => {
+  const name = variantName.toLowerCase();
+  if (name.includes("black")) return "bg-black";
+  if (name.includes("white")) return "bg-white border-gray-300";
+  if (name.includes("blue")) return "bg-blue-600";
+  if (name.includes("red")) return "bg-red-600";
+  if (name.includes("green")) return "bg-green-600";
+  if (name.includes("purple")) return "bg-purple-600";
+  if (name.includes("silver")) return "bg-gray-400";
+  if (name.includes("graphite")) return "bg-gray-800";
+  return "bg-gray-300";
+};
+
+const AccordionItem = ({ title, children }: { title: string, children: React.ReactNode }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-gray-200">
+      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 text-left">
+        <span className="font-medium text-gray-800">{title}</span>
+        <ChevronDown className={clsx("h-5 w-5 text-gray-500 transition-transform", { "rotate-180": isOpen })} />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="pb-4 text-gray-600 prose prose-sm max-w-none"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 
 export default function ProductDetailClient({ product }: { product: ProductWithDetails }) {
   const { addItem } = useCart()
   const [quantity, setQuantity] = useState(1)
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(
+    Math.max(0, product.variants.findIndex(v => v.inStock > 0))
+  );
   const [isPending, startTransition] = useTransition()
+  const [isAdded, setIsAdded] = useState(false)
+
+  useEffect(() => {
+    if (!isAdded) return;
+    const timeout = setTimeout(() => setIsAdded(false), 2500);
+    return () => clearTimeout(timeout);
+  }, [isAdded]);
+
+  if (!product?.variants || product.variants.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-xl text-gray-500">Product not available.</p>
+      </div>
+    );
+  }
+
+  const selectedVariant = product.variants[selectedVariantIndex];
 
   const handleAddToCart = () => {
     startTransition(() => {
-      addItem(product.id, quantity)
-    })
-  }
+      addItem(selectedVariant.id, quantity);
+      setIsAdded(true);
+    });
+  };
 
-  const totalRating = product.reviews.reduce((acc, review) => acc + review.rating, 0)
-  const avgRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0
-  const reviewCount = product.reviews.length
+  const totalRating = product.reviews.reduce((acc, review) => acc + review.rating, 0);
+  const avgRating = product.reviews.length > 0 ? totalRating / product.reviews.length : 0;
+  const reviewCount = product.reviews.length;
 
-  const displayPrice = product.offerPrice ?? product.price
-  const hasOffer = product.offerPrice && product.offerPrice < product.price
-  const savePercentage = hasOffer ? Math.round(((product.price - product.offerPrice!) / product.price) * 100) : 0
+  const displayPrice = selectedVariant.offerPrice ?? selectedVariant.price;
+  const hasOffer = selectedVariant.offerPrice && selectedVariant.offerPrice < selectedVariant.price;
 
   return (
-    <div className="min-h-screen bg-white py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-            <div className="relative overflow-hidden rounded-2xl bg-gray-100">
-              <Image
-                src={product.images[selectedImageIndex] || "/placeholder.svg"}
-                alt={product.title}
-                width={600}
-                height={600}
-                className="w-full h-96 lg:h-[450px] object-cover transition-all duration-300"
-              />
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {product.images.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      selectedImageIndex === index ? "bg-indigo-600" : "bg-white/50"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                    selectedImageIndex === index ? "border-indigo-600" : "border-gray-200"
-                  }`}
+    <div className="bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16">
+          
+          {/* --- Image Gallery (Left Column) --- */}
+          <div className="lg:sticky lg:top-24 self-start space-y-4">
+            {/* --- THE CORE FIX --- 
+                Using `aspect-square` forces the container into a predictable shape.
+                This prevents the image from growing too tall and overwhelming the viewport.
+            */}
+            <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square">
+              <AnimatePresence>
+                <motion.div
+                  key={selectedVariant.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0"
                 >
                   <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`${product.title} ${index + 1}`}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
+                    src={selectedVariant.image || "/placeholder.svg"}
+                    alt={product.title}
+                    fill
+                    className="object-cover"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Thumbnails */}
+            <div className="grid grid-cols-5 gap-4">
+               {product.variants.map((variant, index) => (
+                <button
+                  key={variant.id}
+                  onClick={() => setSelectedVariantIndex(index)}
+                  className={clsx(
+                    "relative aspect-square rounded-lg overflow-hidden transition-all duration-200 ring-offset-2 ring-offset-white",
+                    {
+                      "ring-2 ring-indigo-500": selectedVariantIndex === index,
+                      "hover:opacity-80": selectedVariantIndex !== index,
+                    }
+                  )}
+                >
+                  <Image
+                    src={variant.image || "/placeholder.svg"}
+                    alt={variant.name}
+                    fill
+                    className="object-cover"
                   />
                 </button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-indigo-600 font-medium bg-indigo-50 px-3 py-1 rounded-full">
+          {/* --- Product Info (Right Column) --- */}
+          <div className="mt-8 lg:mt-0 space-y-6">
+            <div>
+              <Link href={`/products?category=${product.category.slug}`} className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                 {product.category?.name || "Uncategorized"}
-              </span>
-              <div className="flex items-center space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`h-4 w-4 ${i < Math.round(avgRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+              </Link>
+              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-gray-900 mt-2">{product.title}</h1>
+              <div className="mt-3 flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`h-5 w-5 ${i < Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" />
+                  ))}
+                </div>
+                <a href="#reviews" className="text-sm text-gray-600 hover:underline">({reviewCount} customer reviews)</a>
+              </div>
+            </div>
+
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold text-gray-900">${displayPrice.toFixed(2)}</span>
+              {hasOffer && <span className="text-xl text-gray-400 line-through">${selectedVariant.price.toFixed(2)}</span>}
+            </div>
+
+            {/* --- Variant Selection (Circular Swatches) --- */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-gray-900">Color: <span className="font-normal text-gray-600">{selectedVariant.name}</span></h3>
+              <div className="flex flex-wrap gap-3">
+                {product.variants.map((variant, index) => (
+                  <button
+                    key={variant.id}
+                    onClick={() => setSelectedVariantIndex(index)}
+                    disabled={variant.inStock === 0}
+                    className={clsx(
+                      "relative w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center ring-offset-2 ring-offset-white",
+                      {
+                        "ring-2 ring-indigo-500": selectedVariantIndex === index,
+                        "hover:ring-2 hover:ring-gray-400": variant.inStock > 0,
+                        "cursor-not-allowed": variant.inStock === 0,
+                      }
+                    )}
+                    aria-label={`Select ${variant.name}`}
+                  >
+                    <span className={clsx("w-full h-full rounded-full", getSwatchColor(variant.name))} />
+                    {variant.inStock === 0 && <span className="absolute w-full h-0.5 bg-red-600 transform rotate-45" />}
+                  </button>
                 ))}
-                <span className="text-sm text-gray-500 ml-2">({reviewCount} reviews)</span>
               </div>
             </div>
 
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{product.title}</h1>
-              <div className="flex items-center space-x-4">
-                <span className="text-3xl font-bold text-gray-900">${displayPrice.toFixed(2)}</span>
-                {hasOffer && <span className="text-lg text-gray-500 line-through">${product.price.toFixed(2)}</span>}
-                {hasOffer && <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">Save {savePercentage}%</span>}
+            {/* --- Quantity & Add to Cart --- */}
+            <div className="space-y-4 pt-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center border border-gray-300 rounded-lg">
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-l-lg transition">-</button>
+                    <span className="w-10 text-center font-medium">{quantity}</span>
+                    <button onClick={() => setQuantity(Math.min(selectedVariant.inStock, quantity + 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-r-lg transition">+</button>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAddToCart}
+                  disabled={isPending || selectedVariant.inStock === 0}
+                  className={clsx(
+                    "w-full text-white py-2.5 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2",
+                    { "bg-indigo-600 hover:bg-indigo-700": !isAdded },
+                    { "bg-green-600": isAdded },
+                    { "bg-gray-400 cursor-not-allowed": selectedVariant.inStock === 0 }
+                  )}
+                >
+                  {isAdded ? (
+                    <> <CheckCircle className="h-5 w-5" /> <span>Added to Cart!</span> </>
+                  ) : (
+                    <> <ShoppingCart className="h-5 w-5" /> <span>{isPending ? "Adding..." : "Add to Cart"}</span> </>
+                  )}
+                </motion.button>
+              </div>
+              <div className="text-center text-sm">
+                {selectedVariant.inStock > 0 ? (
+                  <p className="text-green-700 font-medium">In Stock{selectedVariant.inStock <= 10 && `, only ${selectedVariant.inStock} left!`}</p>
+                ) : (
+                  <p className="text-red-600 font-medium">Out of Stock</p>
+                )}
               </div>
             </div>
 
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-600 leading-relaxed">{product.description}</p>
+            {/* --- Accordions for Details --- */}
+            <div className="pt-6">
+              <AccordionItem title="Description">
+                <p>{product.description}</p>
+              </AccordionItem>
+              <AccordionItem title="Shipping & Returns">
+                <p>Enjoy free shipping on orders over $100. We offer a 30-day return policy for unused items in their original packaging. Please see our full policy for more details.</p>
+              </AccordionItem>
             </div>
-
-            <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full ${product.inStock > 10 ? "bg-green-500" : product.inStock > 0 ? "bg-yellow-500" : "bg-red-500"}`} />
-              <span className="text-sm text-gray-600">
-                {product.inStock > 10 ? "In Stock" : product.inStock > 0 ? "Low Stock" : "Out of Stock"} ({product.inStock} available)
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-              <div className="flex items-center space-x-3">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:border-indigo-600 transition-colors duration-300">-</button>
-                <span className="text-lg font-semibold w-8 text-center">{quantity}</span>
-                <button onClick={() => setQuantity(Math.min(product.inStock, quantity + 1))} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:border-indigo-600 transition-colors duration-300">+</button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAddToCart} disabled={isPending || product.inStock === 0 } className="w-full bg-indigo-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2">
-                <ShoppingCart className="h-5 w-5" />
-                <span>{isPending ? "Adding..." : "Add to Cart"}</span>
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-xl font-semibold text-lg hover:border-indigo-600 hover:text-indigo-600 transition-all duration-300 flex items-center justify-center space-x-2">
-                <Heart className="h-5 w-5" />
-                <span>Add to Wishlist</span>
-              </motion.button>
-            </div>
-
-            <div className="border-t pt-6 space-y-4">
-              <div className="flex items-center space-x-3 text-gray-600"><Truck className="h-5 w-5" /><span>Free shipping on orders over $100</span></div>
-              <div className="flex items-center space-x-3 text-gray-600"><Shield className="h-5 w-5" /><span>2-year warranty included</span></div>
-              <div className="flex items-center space-x-3 text-gray-600"><RotateCcw className="h-5 w-5" /><span>30-day return policy</span></div>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

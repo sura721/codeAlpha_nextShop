@@ -1,166 +1,180 @@
+// lib/actions/product.actions.ts
 'use server';
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
-import { redirect } from 'next/navigation';
-import { ProductWithDetails } from '@/lib/types';
-import { Category, Prisma } from '../generated/prisma';
+import { Prisma } from '@/lib/generated/prisma';
+import { z } from 'zod';
+import { slugify } from '@/lib/utils';
+import { auth } from '@clerk/nextjs/server';
+
+async function isAdmin() {
+  const { userId } = await auth();
+  if (!userId) return false;
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  return user?.admin === true;
+}
+
+async function createUniqueSlug(title: string): Promise<string> {
+  const baseSlug = slugify(title);
+  let slug = baseSlug;
+  let counter = 1;
+  while (await prisma.product.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return slug;
+}
+
+const variantSchema = z.object({
+  name: z.string().min(1, 'Variant name is required'),
+  price: z.number().min(0, 'Price must be positive'),
+  inStock: z.number().int().min(0, 'Stock must be a positive integer'),
+  image: z.string().url('A valid image URL is required'),
+  offerPrice: z.number().min(0).optional().nullable(),
+});
+
+const productSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  categoryId: z.string().min(1, 'Category is required'),
+  variants: z.array(variantSchema).min(1, 'At least one product variant is required'),
+});
+
+export async function createProductWithVariants(data: unknown) {
+  if (!(await isAdmin())) {
+    return { success: false, error: { form: 'Unauthorized: You are not an admin.' } };
+  }
+
+  const result = productSchema.safeParse(data);
+
+  if (!result.success) {
+    return { success: false, error: result.error.flatten().fieldErrors };
+  }
+
+  const { title, description, categoryId, variants } = result.data;
+
+  try {
+    const slug = await createUniqueSlug(title);
+
+    await prisma.$transaction(async (tx) => {
+      const newProduct = await tx.product.create({
+        data: {
+          title,
+          description,
+          categoryId,
+          slug,
+        },
+      });
+
+      await tx.productVariant.createMany({
+        data: variants.map((variant) => ({
+          name: variant.name,
+          price: variant.price,
+          inStock: variant.inStock,
+          image: variant.image,
+          offerPrice: variant.offerPrice,
+          productId: newProduct.id,
+          sku: `${slug}-${slugify(variant.name)}`,
+        })),
+      });
+    });
+
+    revalidatePath('/admin/products');
+    revalidatePath('/products');
+    return { success: true };
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+        return { success: false, error: { form: 'A product or variant with this name/SKU already exists.' } };
+    }
+    return { success: false, error: { form: 'An unexpected database error occurred.' } };
+  }
+}
 
 export async function deleteProduct(productId: string) {
+  if (!(await isAdmin())) {
+    return { success: false, message: 'Unauthorized.' };
+  }
   if (!productId) {
     throw new Error('Product ID is required.');
   }
 
   try {
-    await prisma.product.delete({
-      where: {
-        id: productId,
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.productVariant.deleteMany({ where: { productId: productId } });
+      await tx.review.deleteMany({ where: { productId: productId } });
+      await tx.product.delete({ where: { id: productId } });
     });
 
     revalidatePath('/admin/products');
-
-    return { success: true, message: 'Product deleted successfully.' };
+    revalidatePath('/products');
+    return { success: true, message: 'Product and its variants deleted successfully.' };
   } catch (error) {
-    console.error('Failed to delete product:', error);
     return { success: false, message: 'Failed to delete product.' };
   }
 }
 
-export async function updateProduct(productId: string, formData: FormData) {
-  if (!productId) {
-    return { success: false, message: 'Product ID is missing.' };
-  }
-
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
-  const price = parseFloat(formData.get('price') as string);
-  const inStock = parseInt(formData.get('inStock') as string);
-  const categoryId = formData.get('categoryId') as string;
-  const images = (formData.get('images') as string).split(',').map(img => img.trim()).filter(img => img.length > 0);
-
-  if (!title || !description || !price || !inStock || !categoryId) {
-    return { success: false, message: 'All fields are required.' };
-  }
-
-  try {
-    await prisma.product.update({
-      where: { id: productId },
-      data: {
-        title,
-        slug: title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
-        description,
-        price,
-        inStock,
-        categoryId,
-        images,
-      },
-    });
-  } catch (error) {
-    console.error('Failed to update product:', error);
-    return { success: false, message: 'Database error: Failed to update product.' };
-  }
-
-  revalidatePath('/admin/products');
-  revalidatePath(`/products/${productId}`); 
-  redirect('/admin/products');
-}
-
-// export async function getProducts(): Promise<ProductWithDetails[]> {
-//   const products = await prisma.product.findMany({
-//     where: {
-//       NOT: {
-//         images: {
-//           equals: []
-//         }
-//       }
-//     },
-//     include: {
-//       category: true,
-//       reviews: true
-//     }
-//   });
-
-//   return products;
-// }
-
-// --- NEW FUNCTION ADDED HERE ---
 export async function getProductBySlug(slug: string) {
   try {
     const product = await prisma.product.findUnique({
-      where: {
-        slug: slug,
-      },
+      where: { slug: slug },
       include: {
-        category: true, 
-        reviews: true,
+        category: true,
+        reviews: { include: { user: true } },
+        variants: true,
       },
     });
     return product;
   } catch (error) {
-    console.error('Failed to get product by slug:', error);
     throw new Error('Failed to fetch product.');
   }
 }
 
-
-
-
-
-// --- REPLACE your old getProducts with this new one ---
 interface GetProductsParams {
   query?: string;
   category?: string;
 }
 
-export async function getProducts({ query, category }: GetProductsParams): Promise<ProductWithDetails[]> {
-  const where: Prisma.ProductWhereInput = {
-    NOT: {
-      images: {
-        equals: []
-      }
-    }
-  };
+export async function getProducts({ query, category }: GetProductsParams) {
+  const where: Prisma.ProductWhereInput = {};
 
   if (query) {
     where.OR = [
       { title: { contains: query, mode: 'insensitive' } },
-      { description: { contains: query, mode: 'insensitive' } }
+      { description: { contains: query, mode: 'insensitive' } },
+      { variants: { some: { name: { contains: query, mode: 'insensitive' } } } },
     ];
   }
 
   if (category && category !== 'All') {
-    // Assuming you want to filter by category name. If you use slugs, change to `slug: category`
-    where.category = {
-      name: category
-    };
+    where.category = { slug: category };
   }
 
   const products = await prisma.product.findMany({
     where,
     include: {
       category: true,
-      reviews: true
+      reviews: true,
+      variants: { orderBy: { price: 'asc' } },
     },
-    orderBy: {
-      createdAt: 'desc'
-    }
+    orderBy: { createdAt: 'desc' },
   });
 
   return products;
 }
 
 
-export async function getCategories(): Promise<Category[]> {
-  try {
-    const categories = await prisma.category.findMany({
-      orderBy: {
-        name: 'asc'
-      }
-    });
-    return categories;
-  } catch (error) {
-    console.error('Failed to fetch categories:', error);
-    return [];
-  }
+export async function getCategories() {
+  return await prisma.category.findMany({
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 }
+
+

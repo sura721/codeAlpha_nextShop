@@ -1,25 +1,26 @@
-// File: app/api/uploadthing/core.ts
-
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { isAdmin } from "@/utils/auth";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 
 const f = createUploadthing();
 
-const handleAuth = () => {
-  const admin = isAdmin();
-  if (!admin) throw new Error("Unauthorized: Admin access required.");
-  return { isAdmin: true };
+const handleAuth = async () => {
+  const { userId } =await auth();
+  if (!userId) throw new Error("Unauthorized: No user ID found.");
+  
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user?.admin) throw new Error("Unauthorized: Admin access required.");
+  
+  return { userId: user.id, userEmail: user.email };
 };
 
 export const ourFileRouter = {
-  productImageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
-    .middleware(() => handleAuth())
+  imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
+    .middleware(async () => await handleAuth())
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for admin:", metadata.isAdmin);
-     
-      console.log("File details:", file.name, file.size);
-
-      return { uploadedBy: "admin" };
+      console.log("Upload complete for user:", metadata.userId);
+      console.log("File URL:", file.url);
+      return { uploadedBy: metadata.userEmail };
     }),
 } satisfies FileRouter;
 

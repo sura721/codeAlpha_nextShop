@@ -1,3 +1,4 @@
+//prosucts/page.tsx
 import { Suspense } from 'react';
 import LoadingSkeleton from "@/components/loading-skeleton";
 import { getProducts, getCategories } from "@/lib/actions/product.actions";
@@ -5,12 +6,10 @@ import ProductsIntroSection from "@/components/products-intro-section";
 import ProductFilters from '@/components/products/product-filters';
 import ProductGrid from '@/components/products/product-grid';
 
-// 1️⃣ Update type to Promise pattern
 type ProductsPageProps = {
   searchParams: Promise<{ q?: string; category?: string }>;
 };
 
-// 2️⃣ Use destructuring with `await` to unwrap promise
 export default async function ProductsPage({ searchParams: searchParamsPromise }: ProductsPageProps) {
   const searchParams = await searchParamsPromise;
   const categories = await getCategories();

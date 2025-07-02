@@ -41,35 +41,41 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ msg: "Missing required fields or images." }, { status: 400 });
     }
 
-    const imageUrls: string[] = [];
-
-    for (const image of images) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const imageName = `${Date.now()}-${slugify(image.name, { lower: true })}`;
-      const filePath = path.join(process.cwd(), "public/uploads", imageName);
-      
-      await writeFile(filePath, buffer);
-      
-      const imageUrl = `/uploads/${imageName}`;
-      imageUrls.push(imageUrl);
-    }
+    const firstImage = images[0];
+    const bytes = await firstImage.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const imageName = `${Date.now()}-${slugify(firstImage.name, { lower: true })}`;
+    const filePath = path.join(process.cwd(), "public/uploads", imageName);
+    
+    await writeFile(filePath, buffer);
+    
+    const imageUrl = `/uploads/${imageName}`;
 
     const priceFloat = parseFloat(price);
     const offerPriceFloat = offerPrice ? parseFloat(offerPrice) : null;
     const inStockInt = parseInt(inStock, 10);
     const slug = await createUniqueSlug(title);
+    const sku = `${slug}-default`;
 
     const product = await prisma.product.create({
       data: {
         title,
         slug,
         description,
-        price: priceFloat,
-        offerPrice: offerPriceFloat,
-        images: imageUrls,
-        inStock: inStockInt,
         categoryId,
+        variants: {
+          create: {
+            name: "Default",
+            price: priceFloat,
+            offerPrice: offerPriceFloat,
+            image: imageUrl,
+            inStock: inStockInt,
+            sku: sku,
+          },
+        },
+      },
+      include: {
+        variants: true,
       },
     });
 
@@ -77,7 +83,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("API Error: /api/add/product", error);
     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
-      return NextResponse.json({ msg: "A product with this title already exists." }, { status: 409 });
+      return NextResponse.json({ msg: "A product with this title or variant SKU already exists." }, { status: 409 });
     }
     if (error instanceof Error) {
       return NextResponse.json({ msg: "Server error", error: error.message }, { status: 500 });

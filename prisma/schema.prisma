@@ -16,29 +16,40 @@ model User {
   admin     Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  orders  Order[]
-  reviews Review[]
-  cart    Cart?
+  orders    Order[]
+  reviews   Review[]
+  cart      Cart?
 }
 
 model Product {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  slug        String      @unique
+  slug        String           @unique
   description String
-  price       Float
-  offerPrice  Float?
-  images      String[]
-  inStock     Int
-  category    Category    @relation(fields: [categoryId], references: [id])
-  categoryId  String      @db.ObjectId
-  orderItems  OrderItem[]
-  cartItems   CartItem[]
+  category    Category         @relation(fields: [categoryId], references: [id])
+  categoryId  String           @db.ObjectId
+  variants    ProductVariant[]
   reviews     Review[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model ProductVariant {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  product        Product     @relation(fields: [productId], references: [id])
+  productId      String      @db.ObjectId
+  name           String
+  price          Float
+  offerPrice     Float?
+  image          String
+  inStock        Int
+  sku            String      @unique
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([productId, name])
 }
 
 model Category {
@@ -73,17 +84,17 @@ enum OrderStatus {
 }
 
 model OrderItem {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  order     Order    @relation(fields: [orderId], references: [id])
-  orderId   String   @db.ObjectId
-  product   Product  @relation(fields: [productId], references: [id])
-  productId String   @db.ObjectId
-  quantity  Int
-  price     Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  order            Order          @relation(fields: [orderId], references: [id])
+  orderId          String         @db.ObjectId
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String         @db.ObjectId
+  quantity         Int
+  price            Float
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  @@unique([orderId, productId])
+  @@unique([orderId, productVariantId])
 }
 
 model Review {
@@ -108,13 +119,13 @@ model Cart {
 }
 
 model CartItem {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  cart      Cart    @relation(fields: [cartId], references: [id])
-  cartId    String  @db.ObjectId
-  product   Product @relation(fields: [productId], references: [id])
-  productId String  @db.ObjectId
-  quantity  Int
-  price     Float
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  cart             Cart           @relation(fields: [cartId], references: [id])
+  cartId           String         @db.ObjectId
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String         @db.ObjectId
+  quantity         Int
+  price            Float
 
-  @@unique([cartId, productId])
+  @@unique([cartId, productVariantId])
 }

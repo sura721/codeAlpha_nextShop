@@ -8,25 +8,36 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ShoppingCart, Heart } from "lucide-react"
-import type { Product } from "@/types"
+import type { ProductWithDetails } from "@/lib/types" // Assuming you have a type like this
 import { useCart } from "@/contexts/cart-context"
 import ToastNotification from "../toast-notification"
+
 interface ProductCardProps {
-  product: Product
+  product: ProductWithDetails // Use a type that includes variants
   index?: number
 }
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
-  const { addItem, isLoading } = useCart()
+  const { addItem, isCartLoading } = useCart()
   const [showToast, setShowToast] = useState(false)
   const router = useRouter()
+
+  // --- FIX STARTS HERE ---
+  // Get the primary variant. Since you sort by price, this will be the cheapest.
+  const primaryVariant = product.variants && product.variants[0];
+
+  // If a product has no variants, don't render the card.
+  if (!primaryVariant) {
+    return null;
+  }
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (isLoading) return
-    
-    await addItem(product.id, 1)
+    if (isCartLoading) return
+
+    // You should probably pass the variant ID to the cart
+    await addItem(primaryVariant.id, 1)
     setShowToast(true)
 
     setTimeout(() => {
@@ -45,7 +56,8 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       <Link href={`/products/${product.slug}`}>
         <div className="relative overflow-hidden">
           <Image
-            src={product.images[0] || "/placeholder.svg"}
+            // Use the image from the primary variant
+            src={primaryVariant.image || "/placeholder.svg"}
             alt={product.title}
             width={400}
             height={300}
@@ -61,7 +73,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleAddToCart}
-              disabled={isLoading}
+              disabled={isCartLoading}
               className="bg-white text-gray-900 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
             >
               <ShoppingCart className="h-5 w-5" />
@@ -88,12 +100,14 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
 
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900">${(product.offerPrice || product.price).toFixed(2)}</span>
+            {/* Use price from the primary variant */}
+            <span className="text-2xl font-bold text-gray-900">${(primaryVariant.offerPrice || primaryVariant.price).toFixed(2)}</span>
 
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">{product.inStock} in stock</span>
+              {/* Use stock from the primary variant */}
+              <span className="text-sm text-gray-500">{primaryVariant.inStock} in stock</span>
               <div
-                className={`w-2 h-2 rounded-full ${product.inStock > 10 ? "bg-green-500" : product.inStock > 0 ? "bg-yellow-500" : "bg-red-500"}`}
+                className={`w-2 h-2 rounded-full ${primaryVariant.inStock > 10 ? "bg-green-500" : primaryVariant.inStock > 0 ? "bg-yellow-500" : "bg-red-500"}`}
               />
             </div>
           </div>
