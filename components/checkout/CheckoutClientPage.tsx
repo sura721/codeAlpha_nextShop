@@ -5,9 +5,9 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { Loader2 } from 'lucide-react';
 import type { CartWithDetails } from '@/lib/types';
-import { createOrder } from '@/lib/actions/order.actions'; // Ensure this import is correct
+import { createOrder } from '@/lib/actions/order.actions';
+import { useCart } from '@/contexts/cart-context';
 import ShippingStep from './ShippingStep';
 import PaymentStep from './PaymentStep';
 import ReviewStep from './ReviewStep';
@@ -19,6 +19,7 @@ export default function CheckoutClientPage({ cart }: { cart: CartWithDetails }) 
   const [step, setStep] = useState<CheckoutStep>('shipping');
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { clearTheCart } = useCart(); // 2. Get the function from the context
 
   const [shippingData, setShippingData] = useState({
     email: '',
@@ -43,14 +44,9 @@ export default function CheckoutClientPage({ cart }: { cart: CartWithDetails }) 
     cvc: '',
   });
 
-  // THIS IS THE FUNCTION WE NEED TO ENSURE IS RUNNING
   const handlePlaceOrder = () => {
-    // THIS CONSOLE LOG IS THE MOST IMPORTANT PART.
-    console.log("EXECUTING THE REAL 'handlePlaceOrder' FUNCTION. Attempting to create a real order.");
-
     if (!cart || !shippingData || !shippingMethod) {
         toast.error("Missing order information.");
-        console.error("Missing cart, shippingData, or shippingMethod");
         return;
     }
 
@@ -62,12 +58,10 @@ export default function CheckoutClientPage({ cart }: { cart: CartWithDetails }) 
       toast.dismiss();
 
       if (result.success && result.orderId) {
-        console.log("SUCCESS! Server returned a real orderId:", result.orderId);
         toast.success("Order placed successfully!");
-        // Redirect to the success page with the REAL order ID
+        clearTheCart(); // 3. Simply call the function. It does all the work.
         router.push(`/order/${result.orderId}`);
       } else {
-        console.error("FAILURE! Server returned an error:", result.error);
         toast.error(result.error || "Failed to place order. Please try again.");
       }
     });
