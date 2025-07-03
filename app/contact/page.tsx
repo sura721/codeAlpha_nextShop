@@ -1,7 +1,7 @@
 // app/contact/page.tsx
 
 import Link from "next/link";
-import { Phone, Mail, Instagram, MessageSquare } from "lucide-react";
+import { Phone, Mail, Instagram, MessageSquare, Linkedin } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -21,20 +21,29 @@ export default function ContactPage() {
 
         <div className="flex items-center gap-3">
           <Mail className="text-indigo-600" />
-          <span className="text-gray-800">support@nextstore.com</span>
+          <span className="text-gray-800">surafeladmas721@gmail.com</span>
         </div>
 
         <Link
-          href="https://t.me/YourTelegramUsername"
+          href="https://t.me/sura7_21"
           target="_blank"
           className="flex items-center gap-3 hover:text-indigo-600 transition"
         >
           <MessageSquare />
           <span>Message us on Telegram</span>
         </Link>
+<Link
+          href="https://www.linkedin.com/in/surafel-admas-8a8393365?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+          target="_blank"
+          className="flex items-center gap-3 hover:text-indigo-600 transition"
+        >
+          <Linkedin />
+          <span>Contact us on LinkedIn</span>
+        </Link>
+
 
         <Link
-          href="https://wa.me/251912345678"
+          href="https://wa.me/+251902663698"
           target="_blank"
           className="flex items-center gap-3 hover:text-green-600 transition"
         >
@@ -43,7 +52,7 @@ export default function ContactPage() {
         </Link>
 
         <Link
-          href="https://instagram.com/YourInstagramHandle"
+          href="https://instagram.com/etern7_21"
           target="_blank"
           className="flex items-center gap-3 hover:text-pink-600 transition"
         >

@@ -22,7 +22,7 @@ export default function AboutPage() {
           Why customers love NextStore:
         </p>
         <ul className="list-disc list-inside text-gray-700 text-lg space-y-1">
-          <li>🚚 Fast delivery within 2–5 days across Ethiopia</li>
+          <li>🚚 Fast delivery within 2–5 days across world</li>
           <li>🤝 7-day return policy for defective or incorrect products</li>
           <li>💬 Friendly, responsive customer support</li>
         </ul>
