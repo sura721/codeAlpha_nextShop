@@ -1,8 +1,7 @@
 import prisma from '@/lib/prisma';
 import UserRoleSwitcher from '@/components/admin/UserRoleSwitcher';
 
-// Helper component for the "Admin" badge
-function AdminBadge() {
+ function AdminBadge() {
   return (
     <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
       Admin

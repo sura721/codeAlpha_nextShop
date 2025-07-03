@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { isAdmin } from "@/utils/auth";
+import { checkIsAdmin } from "@/lib/actions/user.actions";
 import slugify from "slugify";
 import { writeFile } from "fs/promises";
 import path from "path";
@@ -23,7 +23,9 @@ async function createUniqueSlug(title: string): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAdmin()) {
+    const isAdmin = await checkIsAdmin();
+
+  if (!isAdmin) {
     return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
   }
 
@@ -81,8 +83,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ msg: "Product created successfully", product }, { status: 201 });
   } catch (error: unknown) {
-    console.error("API Error: /api/add/product", error);
-    if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json({ msg: "A product with this title or variant SKU already exists." }, { status: 409 });
     }
     if (error instanceof Error) {

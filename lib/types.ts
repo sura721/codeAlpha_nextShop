@@ -26,7 +26,6 @@ export type ProductWithDetails = Prisma.ProductGetPayload<typeof productWithDeta
 export const cartWithDetailsValidator = Prisma.validator<Prisma.CartDefaultArgs>()({
   include: {
     items: {
-      // orderBy: { createdAt: 'asc' }, // REMOVE THIS LINE
       include: {
         productVariant: {
           include: {

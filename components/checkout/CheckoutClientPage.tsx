@@ -1,5 +1,4 @@
-// components/checkout/CheckoutClientPage.tsx
-
+ 
 "use client";
 
 import { useState, useTransition } from 'react';
@@ -19,8 +18,7 @@ export default function CheckoutClientPage({ cart }: { cart: CartWithDetails }) 
   const [step, setStep] = useState<CheckoutStep>('shipping');
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const { clearTheCart } = useCart(); // 2. Get the function from the context
-
+  const { clearTheCart } = useCart();  
   const [shippingData, setShippingData] = useState({
     email: '',
     firstName: '',
@@ -59,7 +57,7 @@ export default function CheckoutClientPage({ cart }: { cart: CartWithDetails }) 
 
       if (result.success && result.orderId) {
         toast.success("Order placed successfully!");
-        clearTheCart(); // 3. Simply call the function. It does all the work.
+        clearTheCart(); 
         router.push(`/order/${result.orderId}`);
       } else {
         toast.error(result.error || "Failed to place order. Please try again.");

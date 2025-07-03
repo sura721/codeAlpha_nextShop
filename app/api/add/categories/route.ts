@@ -1,5 +1,4 @@
-// File: app/api/categories/route.ts
-
+ 
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma"; 
 
@@ -11,26 +10,21 @@ import prisma from "@/lib/prisma";
     });
     return NextResponse.json(categories);
   } catch (error) {
-    console.error("Failed to fetch categories:", error);
-    return new NextResponse(
+     return new NextResponse(
       JSON.stringify({ msg: "Failed to fetch categories." }),
       { status: 500 }
     );
   }
 }
 
-// Function to generate a URL-friendly slug from a name
-function createSlug(name: string): string {
+ function createSlug(name: string): string {
   return name
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "") // Remove non-word characters (excluding spaces and hyphens)
-    .replace(/[\s_-]+/g, "-") // Replace spaces and underscores with a single hyphen
-    .replace(/^-+|-+$/g, ""); // Remove leading or trailing hyphens
-}
-
-// The new POST function to create a category
-export async function POST(request: NextRequest) {
+    .replace(/[^\w\s-]/g, "") 
+    .replace(/[\s_-]+/g, "-")  
+    .replace(/^-+|-+$/g, ""); }
+ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name } = body;
@@ -45,8 +39,7 @@ export async function POST(request: NextRequest) {
     const trimmedName = name.trim();
     const slug = createSlug(trimmedName);
 
-    // Check if a category with the same name or slug already exists
-    const existingCategory = await prisma.category.findFirst({
+     const existingCategory = await prisma.category.findFirst({
       where: {
         OR: [{ name: { equals: trimmedName, mode: "insensitive" } }, { slug: slug }],
       },
@@ -55,22 +48,20 @@ export async function POST(request: NextRequest) {
     if (existingCategory) {
       return new NextResponse(
         JSON.stringify({ msg: "A category with this name or slug already exists." }),
-        { status: 409 } // 409 Conflict status code
+        { status: 409 }  
       );
     }
 
-    // Create the new category
-    const newCategory = await prisma.category.create({
+     const newCategory = await prisma.category.create({
       data: {
         name: trimmedName,
         slug: slug,
       },
     });
 
-    return NextResponse.json(newCategory, { status: 201 }); // 201 Created status code
+    return NextResponse.json(newCategory, { status: 201 });   
   } catch (error) {
-    console.error("Failed to create category:", error);
-    return new NextResponse(
+     return new NextResponse(
       JSON.stringify({ msg: "Failed to create category." }),
       { status: 500 }
     );

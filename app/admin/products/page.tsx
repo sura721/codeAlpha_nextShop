@@ -1,5 +1,4 @@
-// /app/admin/products/page.tsx (or wherever this file is located)
-import Link from 'next/link';
+ import Link from 'next/link';
 import Image from 'next/image';
 import { PlusCircle } from 'lucide-react';
 import prisma from '@/lib/prisma';
@@ -55,14 +54,12 @@ export default async function AdminProductsPage() {
             </thead>
             <tbody>
               {products.map((product) => {
-                // --- FIX 2: Get the primary variant from the product's variants array ---
-                const primaryVariant = product.variants[0];
+                 const primaryVariant = product.variants[0];
                 return (
                   <tr key={product.id} className="border-b border-slate-200 hover:bg-slate-50">
                     <td className="p-4">
                       <div className="h-16 w-16 flex-shrink-0">
-                        {/* --- FIX 3: Use the image from the primary variant --- */}
-                        {primaryVariant?.image ? (
+                         {primaryVariant?.image ? (
                           <Image src={primaryVariant.image} alt={product.title} width={64} height={64} className="h-full w-full object-cover rounded-md" />
                         ) : (
                           <div className="h-16 w-16 bg-slate-200 rounded-md flex items-center justify-center text-xs text-slate-500">No Image</div>

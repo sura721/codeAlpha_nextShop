@@ -1,5 +1,4 @@
-//prosucts/page.tsx
-import { Suspense } from 'react';
+ import { Suspense } from 'react';
 import LoadingSkeleton from "@/components/loading-skeleton";
 import { getProducts, getCategories } from "@/lib/actions/product.actions";
 import ProductsIntroSection from "@/components/products-intro-section";

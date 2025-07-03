@@ -1,19 +1,16 @@
-// app/order/[orderId]/page.tsx
-
+ 
 import { redirect } from 'next/navigation';
 import { getOrderDetails, OrderWithDetails } from '@/lib/actions/order.actions';
-import OrderSuccessClient from '@/components/order/OrderSuccessClient'; // We can reuse this!
-
-// This function generates dynamic metadata for the page title
-export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }) {
+import OrderSuccessClient from '@/components/order/OrderSuccessClient';
+ 
+ export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }) {
     const {orderId} = await params
   return {
     title: `Order Details #${orderId} - NextShop`,
   };
 }
 
-// A simple wrapper component to add a title
-function OrderDetailsDisplay({ order }: { order: OrderWithDetails }) {
+ function OrderDetailsDisplay({ order }: { order: OrderWithDetails }) {
   return (
     <>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
@@ -24,8 +21,7 @@ function OrderDetailsDisplay({ order }: { order: OrderWithDetails }) {
           Order ID: <span className="font-medium text-gray-900">{order.id}</span>
         </p>
       </div>
-      {/* The rest of the page is the same as the success page, so we reuse the component */}
-      <OrderSuccessClient order={order} />
+       <OrderSuccessClient order={order} />
     </>
   );
 }

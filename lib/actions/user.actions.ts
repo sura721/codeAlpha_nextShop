@@ -25,8 +25,7 @@ export const checkIsAdmin = async (): Promise<boolean> => {
 
     return user?.admin ?? false;
   } catch (error) {
-    console.error("Failed to check admin status:", error);
-    return false;
+     return false;
   }
 };
 
@@ -48,14 +47,13 @@ export async function toggleUserAdminStatus(userId: string) {
         id: userId,
       },
       data: {
-        admin: !userToModify.admin, // Invert the current admin status
+        admin: !userToModify.admin, 
       },
     });
 
     revalidatePath('/admin/users');
     return { success: true, message: 'User role updated successfully.' };
   } catch (error) {
-    console.error('Failed to toggle admin status:', error);
-    return { success: false, message: 'Failed to update user role.' };
+     return { success: false, message: 'Failed to update user role.' };
   }
 }

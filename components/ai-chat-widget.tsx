@@ -5,11 +5,10 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import { motion, AnimatePresence, type Transition } from "framer-motion"
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from "lucide-react"
 
-// UPDATE #1: The front-end now uses "model" to match the backend.
-interface Message {
+ interface Message {
   id: string
   content: string
-  sender: "user" | "model" // Changed from "ai"
+  sender: "user" | "model"  
   timestamp: Date
 }
 
@@ -52,7 +51,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
       id: "1",
       content:
         "Hi! I'm Nexi, your AI shopping assistant. How can I help you today? I can help you find products, answer questions, or just chat!",
-      sender: "model", // UPDATE #2: Changed from "ai"
+      sender: "model", 
       timestamp: new Date(),
     },
   ])
@@ -91,9 +90,8 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
     setIsTyping(true);
     scrollToBottom();
 
-    // UPDATE #3: The mapping is now direct and type-safe. No more ternary.
-    const formattedHistory: HistoryMessage[] = updatedMessages.map(msg => ({
-      role: msg.sender, // This now perfectly matches 'user' | 'model'
+     const formattedHistory: HistoryMessage[] = updatedMessages.map(msg => ({
+      role: msg.sender,  
       parts: [{ text: msg.content }]
     }));
 
@@ -103,16 +101,15 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
-        sender: "model", // UPDATE #4: Changed from "ai"
+        sender: "model", 
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
-      console.error("Error sending message:", error)
-      const errorMessage: Message = {
+       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: "I'm sorry, I'm having trouble responding right now. Please try again in a moment.",
-        sender: "model", // UPDATE #5: Changed from "ai"
+        sender: "model", 
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, errorMessage]);

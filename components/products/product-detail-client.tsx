@@ -9,8 +9,7 @@ import { ProductWithDetails } from "@/lib/types"
 import { useCart } from "@/contexts/cart-context"
 import { clsx } from "clsx"
 
-// Helper functions (getSwatchColor, AccordionItem) remain the same...
-const getSwatchColor = (variantName: string): string => {
+ const getSwatchColor = (variantName: string): string => {
   const name = variantName.toLowerCase();
   if (name.includes("black")) return "bg-black";
   if (name.includes("white")) return "bg-white border-gray-300";

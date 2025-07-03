@@ -68,8 +68,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         const data = await res.json();
         setCategories(data);
       } catch (error) {
-        console.error(error);
-      } finally {
+       } finally {
         setIsFetchingCategories(false);
       }
     };
@@ -132,8 +131,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         toast.error(`Error: ${data.msg || `Failed to ${isEditing ? 'update' : 'add'} product`}`);
       }
     } catch (error) {
-      console.error(error);
-      toast.error('An unexpected network error occurred.');
+       toast.error('An unexpected network error occurred.');
     } finally {
       setIsSubmitting(false);
     }

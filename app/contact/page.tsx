@@ -16,16 +16,16 @@ export default function ContactPage() {
       <div className="space-y-4 text-left">
         <div className="flex items-center gap-3">
           <Phone className="text-indigo-600" />
-          <span className="text-gray-800">+251 912 345 678</span>
+          <span className="text-gray-800">{process.env.PHONE}</span>
         </div>
 
         <div className="flex items-center gap-3">
           <Mail className="text-indigo-600" />
-          <span className="text-gray-800">surafeladmas721@gmail.com</span>
+          <span className="text-gray-800"> {process.env.EMAIL}  </span>
         </div>
 
         <Link
-          href="https://t.me/sura7_21"
+          href={`https://t.me/${process.env.TELEGRAM}`}
           target="_blank"
           className="flex items-center gap-3 hover:text-indigo-600 transition"
         >
@@ -33,7 +33,7 @@ export default function ContactPage() {
           <span>Message us on Telegram</span>
         </Link>
 <Link
-          href="https://www.linkedin.com/in/surafel-admas-8a8393365?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+          href={`${process.env.LINKEDIN}`}
           target="_blank"
           className="flex items-center gap-3 hover:text-indigo-600 transition"
         >

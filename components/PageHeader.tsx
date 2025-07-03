@@ -1,5 +1,4 @@
-// components/PageHeader.tsx
-export function PageHeader() {
+ export function PageHeader() {
   return (
     <div className="text-center py-16 md:py-24">
       <h1 className="font-serif text-4xl md:text-5xl text-gray-800">

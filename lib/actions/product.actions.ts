@@ -1,5 +1,4 @@
-// lib/actions/product.actions.ts
-'use server';
+ 'use server';
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
@@ -100,16 +99,14 @@ export async function deleteProduct(productId: string) {
   }
 
   try {
-    // IMPORTANT: Deleting items from past orders is bad for record-keeping.
-    // We will first check if this product exists in any non-pending orders.
+    
     const existingOrderCount = await prisma.orderItem.count({
       where: {
         productVariant: {
           productId: productId,
         },
         order: {
-          // You might want to be more strict, e.g., NOT IN [CANCELLED, PENDING]
-          // For now, we assume any order is a historical record.
+          
           id: { not: undefined } 
         }
       },
@@ -122,26 +119,20 @@ export async function deleteProduct(productId: string) {
       };
     }
     
-    // If we pass the check, we can proceed with deletion.
-    await prisma.$transaction(async (tx) => {
-      // 1. Delete items from all user carts
-      await tx.cartItem.deleteMany({
+     await prisma.$transaction(async (tx) => {
+       await tx.cartItem.deleteMany({
         where: {
           productVariant: {
             productId: productId,
           },
         },
       });
-
-      // 2. Delete all product variants
-      // This will now succeed because cart items are gone, and we've checked for order items.
+ 
       await tx.productVariant.deleteMany({ where: { productId: productId } });
 
-      // 3. Delete all reviews
-      await tx.review.deleteMany({ where: { productId: productId } });
+       await tx.review.deleteMany({ where: { productId: productId } });
 
-      // 4. Delete the product itself
-      await tx.product.delete({ where: { id: productId } });
+       await tx.product.delete({ where: { id: productId } });
     });
 
     revalidatePath('/admin/products');
@@ -150,8 +141,7 @@ export async function deleteProduct(productId: string) {
     return { success: true, message: 'Product and its associations deleted successfully.' };
 
   } catch (error) {
-    console.error("Failed to delete product:", error); 
-    return { success: false, message: 'Failed to delete product.' };
+     return { success: false, message: 'Failed to delete product.' };
   }
 }
 export async function getProductBySlug(slug: string) {
@@ -174,57 +164,63 @@ interface GetProductsParams {
   query?: string;
   category?: string;
 }
-export async function getProducts({ query, category }: GetProductsParams) {
-  const where: Prisma.ProductWhereInput = {
-    isActive: true,
-  };
 
-  if (query) {
-    where.OR = [
-      { title: { contains: query, mode: 'insensitive' } },
-      { description: { contains: query, mode: 'insensitive' } },
-      { variants: { some: { name: { contains: query, mode: 'insensitive' } } } },
-    ];
-  }
+interface GetProductsParams {
+  query?: string;
+  category?: string;
+  priceLessThan?: number;
+  priceGreaterThan?: number;
+}
+
+export async function getProducts({ query, category, priceLessThan, priceGreaterThan }: GetProductsParams) {
+  const andConditions: Prisma.ProductWhereInput[] = [{ isActive: true }];
 
   if (category && category !== 'all') {
-    where.category = {
-      slug: category,
-    };
+    andConditions.push({
+      category: {
+        slug: category,
+      },
+    });
+  }
+
+  if (query) {
+    andConditions.push({
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { variants: { some: { name: { contains: query, mode: 'insensitive' } } } },
+      ],
+    });
   }
   
+  // Add price filtering directly to the database query
+  if (priceLessThan !== undefined) {
+    andConditions.push({ variants: { some: { price: { lt: priceLessThan } } } });
+  }
+
+  if (priceGreaterThan !== undefined) {
+    andConditions.push({ variants: { some: { price: { gt: priceGreaterThan } } } });
+  }
+
   try {
     const products = await prisma.product.findMany({
-      where: where,
+      where: { AND: andConditions },
       include: {
         category: true,
         reviews: true,
         variants: { orderBy: { price: 'asc' } },
       },
       orderBy: { createdAt: 'desc' },
+      take: 50,
     });
 
     return products;
   } catch (error) {
-    console.error("Failed to fetch products:", error);
-    return [];
+     return [];
   }
 }
 
 
-
-export async function getCategories() {
-  return await prisma.category.findMany({
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-}
 
 
 
@@ -249,7 +245,20 @@ export async function deactivateProduct(productId: string) {
     revalidatePath('/products');
     return { success: true, message: 'Product deactivated successfully.' };
   } catch (error) {
-    console.error("Failed to deactivate product:", error);
-    return { success: false, message: 'Failed to deactivate product.' };
+     return { success: false, message: 'Failed to deactivate product.' };
   }
+}
+
+
+export async function getCategories() {
+  return await prisma.category.findMany({
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 }

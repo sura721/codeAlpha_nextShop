@@ -190,8 +190,7 @@ export default function AddProductPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    // --- THIS IS THE FIX ---
-                    ref={(el) => {
+                     ref={(el) => {
                       fileInputRefs.current[index] = el;
                     }}
                     onChange={(e) => e.target.files && handleImageSelect(index, e.target.files[0])}

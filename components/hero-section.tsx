@@ -1,15 +1,13 @@
 "use client"
 
-// import { motion } from "framer-motion"
-import {motion} from "framer-motion"
+ import {motion} from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles } from "lucide-react"
 
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      {/* Background Animation */}
-      <div className="absolute inset-0">
+       <div className="absolute inset-0">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],

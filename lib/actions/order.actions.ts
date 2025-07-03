@@ -1,6 +1,5 @@
 "use server";
-//order.actions.ts
-import { auth } from "@clerk/nextjs/server";
+ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from 'next/cache';
 import prisma from "@/lib/prisma";
@@ -69,7 +68,7 @@ export async function createOrder(
           grandTotal,
           shippingCost: shippingMethod.price,
           shippingMethod: shippingMethod.name,
-          shippingAddress: shippingData, // Stored as JSON
+          shippingAddress: shippingData, 
           status: "PENDING",
         },
       });
@@ -99,8 +98,7 @@ export async function createOrder(
 
     return { success: true, orderId: newOrder.id };
   } catch (error) {
-    console.error("Failed to create order:", error);
-    return { success: false, error: "Something went wrong. Please try again." };
+     return { success: false, error: "Something went wrong. Please try again." };
   }
 }
 
@@ -119,8 +117,7 @@ export async function getOrderDetails(orderId: string): Promise<OrderWithDetails
       id: orderId,
       userId: user.id,
     },
-    // Use the include object directly here instead of spreading a variable
-    include: {
+     include: {
       items: {
         include: {
           productVariant: {
@@ -133,8 +130,7 @@ export async function getOrderDetails(orderId: string): Promise<OrderWithDetails
     },
   });
 
-  // We add a type assertion to tell TypeScript the shape of the returned object
-  return order as OrderWithDetails | null;
+   return order as OrderWithDetails | null;
 }
 
 export async function updateOrderStatus(orderId: string, newStatus: OrderStatus) {
@@ -158,8 +154,7 @@ export async function updateOrderStatus(orderId: string, newStatus: OrderStatus)
 
     return { success: true, message: 'Order status updated successfully.' };
   } catch (error) {
-    console.error('Failed to update order status:', error);
-    return { success: false, message: 'Failed to update order status.' };
+     return { success: false, message: 'Failed to update order status.' };
   }
 }
 
@@ -172,22 +167,19 @@ export async function getOrdersForUser() {
 
   const user = await prisma.user.findUnique({ where: { clerkId } });
   if (!user) {
-    // This case is unlikely if they are logged in, but good practice
-    return []; 
+     return []; 
   }
 
   const orders = await prisma.order.findMany({
     where: {
       userId: user.id,
     },
-    // Include a count of items in each order for the summary view
-    include: {
+     include: {
       _count: {
         select: { items: true },
       },
     },
-    // Show the most recent orders first
-    orderBy: {
+     orderBy: {
       createdAt: 'desc',
     },
   });

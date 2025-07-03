@@ -1,5 +1,4 @@
-// app/about/page.tsx
-
+ 
 import Link from "next/link";
 
 export default function AboutPage() {
@@ -10,7 +9,7 @@ export default function AboutPage() {
       </h1>
 
       <p className="text-gray-700 leading-relaxed text-center text-lg">
-        Welcome to <span className="font-semibold">NextStore</span> — your trusted online electronics store in Ethiopia 🇪🇹.
+        Welcome to <span className="font-semibold">NextStore</span> — your trusted online electronics store in the world.
       </p>
 
       <p className="text-gray-700 leading-relaxed text-lg">
@@ -45,7 +44,7 @@ export default function AboutPage() {
         </Link>
 
         <Link
-          href="https://surafels-portfolio.vercel.app/"
+          href={`${process.env.PORTFOLIO}`}
           target="_blank"
           className="inline-block border border-indigo-600 text-indigo-600 px-6 py-3 rounded-full text-base font-semibold hover:bg-indigo-50 transition text-center"
         >

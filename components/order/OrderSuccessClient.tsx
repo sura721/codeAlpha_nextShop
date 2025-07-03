@@ -1,5 +1,4 @@
-// components/order/OrderSuccessClient.tsx
-
+ 
 "use client";
 
 import Image from "next/image";
@@ -8,8 +7,7 @@ import { CheckCircle } from "lucide-react";
 import type { OrderWithDetails } from "@/lib/actions/order.actions";
 import DeliveryProgress from "./DeliveryProgress";
 
-// A better type guard using `unknown` instead of `any`
-function isShippingAddress(obj: unknown): obj is { firstName: string; lastName: string; address: string; city: string; postalCode: string; email: string } {
+ function isShippingAddress(obj: unknown): obj is { firstName: string; lastName: string; address: string; city: string; postalCode: string; email: string } {
     return (
         typeof obj === 'object' &&
         obj !== null &&
@@ -19,8 +17,7 @@ function isShippingAddress(obj: unknown): obj is { firstName: string; lastName: 
     );
 }
 
-// Extract the item type for clarity and to fix the 'any' error
-type OrderItem = OrderWithDetails['items'][number];
+ type OrderItem = OrderWithDetails['items'][number];
 
 export default function OrderSuccessClient({ order }: { order: OrderWithDetails }) {
   const shippingAddress = isShippingAddress(order.shippingAddress) ? order.shippingAddress : null;

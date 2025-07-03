@@ -1,5 +1,4 @@
-// components/layout/AIHelper.tsx
-'use client';
+ 'use client';
 
 import { getAIResponse } from '@/lib/actions/ai.actions';
 import AIChatWidget from '../ai-chat-widget';

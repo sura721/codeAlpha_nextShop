@@ -8,12 +8,12 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ShoppingCart, Heart } from "lucide-react"
-import type { ProductWithDetails } from "@/lib/types" // Assuming you have a type like this
+import type { ProductWithDetails } from "@/lib/types"  
 import { useCart } from "@/contexts/cart-context"
 import ToastNotification from "../toast-notification"
 
 interface ProductCardProps {
-  product: ProductWithDetails // Use a type that includes variants
+  product: ProductWithDetails 
   index?: number
 }
 
@@ -21,13 +21,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { addItem, isCartLoading } = useCart()
   const [showToast, setShowToast] = useState(false)
   const router = useRouter()
-
-  // --- FIX STARTS HERE ---
-  // Get the primary variant. Since you sort by price, this will be the cheapest.
+ 
   const primaryVariant = product.variants && product.variants[0];
 
-  // If a product has no variants, don't render the card.
-  if (!primaryVariant) {
+   if (!primaryVariant) {
     return null;
   }
 
@@ -36,8 +33,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.stopPropagation()
     if (isCartLoading) return
 
-    // You should probably pass the variant ID to the cart
-    await addItem(primaryVariant.id, 1)
+     await addItem(primaryVariant.id, 1)
     setShowToast(true)
 
     setTimeout(() => {
@@ -56,8 +52,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       <Link href={`/products/${product.slug}`}>
         <div className="relative overflow-hidden">
           <Image
-            // Use the image from the primary variant
-            src={primaryVariant.image || "/placeholder.svg"}
+             src={primaryVariant.image || "/placeholder.svg"}
             alt={product.title}
             width={400}
             height={300}
@@ -100,11 +95,11 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
 
           <div className="flex items-center justify-between">
-            {/* Use price from the primary variant */}
+            {/* Using price from the primary variant */}
             <span className="text-2xl font-bold text-gray-900">${(primaryVariant.offerPrice || primaryVariant.price).toFixed(2)}</span>
 
             <div className="flex items-center space-x-2">
-              {/* Use stock from the primary variant */}
+              {/* Using stock from the primary variant */}
               <span className="text-sm text-gray-500">{primaryVariant.inStock} in stock</span>
               <div
                 className={`w-2 h-2 rounded-full ${primaryVariant.inStock > 10 ? "bg-green-500" : primaryVariant.inStock > 0 ? "bg-yellow-500" : "bg-red-500"}`}

@@ -13,7 +13,7 @@ interface CartContextType {
   addItem: (productVariantId: string, quantity: number) => Promise<void>;
   updateItemQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
-  clearTheCart: () => Promise<void>; // THIS LINE IS THE FIX
+  clearTheCart: () => Promise<void>; 
   isCartLoading: boolean;
   isInitializing: boolean;
 }
@@ -38,8 +38,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const initialCart = await getCart();
         updateCartState(initialCart);
       } catch (error) {
-        console.error("Failed to load initial cart", error);
-        toast.error("Could not load your cart.");
+         toast.error("Could not load your cart.");
       } finally {
         setIsInitializing(false);
       }
@@ -86,9 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearTheCart = async () => {
     startTransition(async () => {
       const result = await clearCart();
-      // THIS IS THE FIX
-      // By checking `result.success`, TypeScript knows `result` is the success
-      // object, which guarantees `result.cart` exists and is of type `CartWithDetails | null`.
+      
       if (result.success) {
         toast.success(result.message || 'Cart cleared!');
         updateCartState(result.cart);
@@ -104,7 +101,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     addItem,
     updateItemQuantity,
     removeItem,
-    clearTheCart, // THIS LINE IS ALSO PART OF THE FIX
+    clearTheCart, 
     isCartLoading,
     isInitializing,
   };

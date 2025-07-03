@@ -5,7 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// lib/utils.ts
 
 export const slugify = (str: string): string => {
   return str

@@ -1,5 +1,4 @@
-// components/ui/StarRating.tsx
-import { Star } from 'lucide-react';
+ import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type StarRatingProps = {

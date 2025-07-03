@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import AdminSidebar from '@/components/admin/AdminSidebar'; // Adjust path if needed
+import AdminSidebar from '@/components/admin/AdminSidebar';   
 import { Menu } from 'lucide-react';
 
 export default function AdminLayoutClient({

@@ -18,8 +18,7 @@ export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
     .middleware(async () => await handleAuth())
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for user:", metadata.userId);
-      console.log("File URL:", file.url);
+      
       return { uploadedBy: metadata.userEmail };
     }),
 } satisfies FileRouter;

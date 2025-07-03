@@ -1,5 +1,4 @@
-// lib/actions/cart.actions.ts
-
+ 
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -7,8 +6,7 @@ import { auth } from '@clerk/nextjs/server';
 import { CartWithDetails, cartWithDetailsValidator } from '../types';
 import prisma from '../prisma';
 
-// THIS IS THE CRITICAL TYPE DEFINITION THAT MUST BE AT THE TOP OF THE FILE
-type CartActionResult = 
+ type CartActionResult = 
   | { success: true; message?: string; cart: CartWithDetails | null }
   | { success: false; error: string };
 
@@ -87,8 +85,7 @@ export async function addCartItem(productVariantId: string, quantity: number): P
     return { success: true, message: 'Item added to cart!', cart: updatedCart };
 
   } catch (error) {
-    console.error('Failed to add item to cart:', error);
-    return { success: false, error: 'An unexpected server error occurred. Please try again.' };
+     return { success: false, error: 'An unexpected server error occurred. Please try again.' };
   }
 }
 
@@ -173,7 +170,6 @@ export async function clearCart(): Promise<CartActionResult> {
     return { success: true, message: 'Cart has been emptied!', cart: updatedCart };
 
   } catch (error) {
-    console.error('Failed to clear cart:', error);
-    return { success: false, error: 'An unexpected server error occurred.' };
+     return { success: false, error: 'An unexpected server error occurred.' };
   }
 }

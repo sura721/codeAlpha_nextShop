@@ -11,11 +11,9 @@ export default function ProductFilters({ categories }: { categories: Category[] 
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // State to manage the input value for debouncing
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
+   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
 
-  // BONUS: Debounce the search input to improve performance
-  useEffect(() => {
+   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
       if (searchTerm) {
@@ -23,9 +21,8 @@ export default function ProductFilters({ categories }: { categories: Category[] 
       } else {
         params.delete('q');
       }
-      // THE FIX: Add { scroll: false } to prevent jumping to the top
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }, 300); // Wait for 300ms after user stops typing
+       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }, 300);  
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm, pathname, router, searchParams]);
@@ -40,8 +37,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
     } else {
       params.set('category', category);
     }
-    // THE FIX: Add { scroll: false } here as well
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -57,8 +53,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
           <input
             type="text"
             placeholder="Search products..."
-            // Use the debounced state
-            value={searchTerm}
+             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
           />
@@ -67,8 +62,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
         <div className="flex items-center space-x-2">
           <Filter className="h-5 w-5 text-gray-400" />
           <select
-            // Read value directly from searchParams for consistency
-            value={searchParams.get('category') || 'All'}
+             value={searchParams.get('category') || 'All'}
             onChange={handleCategoryChange}
             className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
           >

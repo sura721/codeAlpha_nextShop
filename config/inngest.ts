@@ -3,11 +3,7 @@ import  prisma  from "@/lib/prisma";
 export const inngest = new Inngest({ id: "nextShop" });
 
 
-
-// user deletetion
-
-
-
+ 
 
 export const deleteUserOnClerkDelete = inngest.createFunction(
   { id: "delete-user-on-clerk-delete", name: "Delete User on Clerk Delete" },
@@ -34,13 +30,11 @@ export const deleteUserOnClerkDelete = inngest.createFunction(
 
 
 
-//creating user
-export const syncUserOnCreate = inngest.createFunction(
+ export const syncUserOnCreate = inngest.createFunction(
   { id: "sync-user-on-create", name: "Sync User on Create" },
   { event: "clerk/user.created" },
   async ({ event, step }) => {
-    console.log("🔥 EVENT:", event); 
-
+ 
     const clerkId = event.data?.id ?? "";
     const email = event.data?.email_addresses?.[0]?.email_address ?? "";
     const name = event.data?.first_name ?? "";

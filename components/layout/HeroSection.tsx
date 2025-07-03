@@ -1,7 +1,5 @@
-// components/HeroSection.tsx
-
-'use client'; // This must be a client component for the autoplay plugin to work
-
+ 
+'use client';  
 import Image from 'next/image';
 import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay";
@@ -14,8 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// Define the shape of the data this component expects
-export type HeroProduct = {
+ export type HeroProduct = {
   href: string;
   src: string;
   alt: string;
@@ -29,8 +26,7 @@ type HeroSectionProps = {
 
 export function HeroSection({ featuredProducts }: HeroSectionProps) {
   if (!featuredProducts || featuredProducts.length === 0) {
-    // Don't render the component if there's no data
-    return null;
+     return null;
   }
 
   return (

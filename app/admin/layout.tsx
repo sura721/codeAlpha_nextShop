@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { checkIsAdmin } from '@/lib/actions/user.actions'; // Adjust path if needed
-import AdminLayoutClient from '@/components/admin/AdminLayoutClient'; // Adjust path if needed
+import { checkIsAdmin } from '@/lib/actions/user.actions'; 
+import AdminLayoutClient from '@/components/admin/AdminLayoutClient';  
 
 export default async function AdminLayout({
   children,
