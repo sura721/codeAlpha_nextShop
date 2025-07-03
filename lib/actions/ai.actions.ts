@@ -1,3 +1,5 @@
+// ai.actions.ts
+
 'use server';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -23,27 +25,10 @@ export async function getAIResponse(userMessage: string): Promise<string> {
   }
 
   try {
-    // 🪐 Fetch live products & categories from your DB
-    const { categories, products } = await fetchProductAndCategoryData(userMessage);
+    // const { categories, products } = await fetchProductAndCategoryData(userMessage);
 
-    // ✅ Create a CONCISE prompt containing only the DYNAMIC data for this request.
-    //    All instructions are already in the systemInstruction.
-    const userPromptWithContext = `
-      The user's message is: "${userMessage}"
-
-      Here is some real-time data from our store to help you answer:
-
-      Available Categories:
-      ${categories.map((c) => `- ${c.name}`).join('\n') || 'N/A'}
-
-      Potentially Matching Products:
-      ${products.length > 0
-        ? products.map((p) => `- ${p.title} (${p.category}): ${p.priceRange}. Link: ${p.url}`).join('\n')
-        : 'No specific products matched the query.'
-      }
-    `;
+    const userPromptWithContext = aiTeacher
  
-    // ✅ Pass ONLY the user's dynamic prompt. The model already knows its persona.
     const result = await model.generateContent(userPromptWithContext);
     const response = result.response;
     const text = response.text();

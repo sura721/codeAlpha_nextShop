@@ -84,34 +84,34 @@ export default function HeroSection() {
             and sophistication.
           </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <Link href="/products">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="group bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
-              >
-                <span>Shop Collection</span>
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </motion.button>
-            </Link>
+       <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.8, duration: 0.8 }}
+  className="flex flex-col sm:flex-row gap-3 justify-center items-center"
+>
+  <Link href="/products">
+    <motion.button
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      className="group bg-indigo-600 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center space-x-1 sm:space-x-2"
+    >
+      <span>Shop Collection</span>
+      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+    </motion.button>
+  </Link>
 
-            <Link href="/products">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-all duration-300"
-              >
-                Learn More
-              </motion.button>
-            </Link>
-          </motion.div>
+  <Link href="/products">
+    <motion.button
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      className="border-2 border-gray-300 text-gray-700 px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-all duration-300"
+    >
+      Learn More
+    </motion.button>
+  </Link>
+</motion.div>
+
         </motion.div>
 
         {/* Floating Elements */}
