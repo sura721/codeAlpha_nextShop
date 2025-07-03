@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { Edit, Trash2, Loader2 } from 'lucide-react';
-import { deleteProduct } from '@/lib/actions/product.actions';
+import { deactivateProduct } from '@/lib/actions/product.actions';
 
 import {
   Dialog,
@@ -25,7 +25,7 @@ export default function ProductActions({ productId }: ProductActionsProps) {
 
   const handleDelete = () => {
     startTransition(() => {
-      deleteProduct(productId);
+      deactivateProduct(productId);
       setOpen(false);
     });
   };

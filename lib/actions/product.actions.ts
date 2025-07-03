@@ -146,11 +146,11 @@ export async function deleteProduct(productId: string) {
 
     revalidatePath('/admin/products');
     revalidatePath('/products');
-    revalidatePath('/cart'); // Also revalidate the cart page
+    revalidatePath('/cart'); 
     return { success: true, message: 'Product and its associations deleted successfully.' };
 
   } catch (error) {
-    console.error("Failed to delete product:", error); // Log the actual error for debugging
+    console.error("Failed to delete product:", error); 
     return { success: false, message: 'Failed to delete product.' };
   }
 }
@@ -174,9 +174,10 @@ interface GetProductsParams {
   query?: string;
   category?: string;
 }
-
 export async function getProducts({ query, category }: GetProductsParams) {
-  const where: Prisma.ProductWhereInput = {};
+  const where: Prisma.ProductWhereInput = {
+    isActive: true,
+  };
 
   if (query) {
     where.OR = [
@@ -186,23 +187,30 @@ export async function getProducts({ query, category }: GetProductsParams) {
     ];
   }
 
-  if (category && category !== 'All') {
-    where.category = { slug: category };
+  if (category && category !== 'all') {
+    where.category = {
+      slug: category,
+    };
   }
+  
+  try {
+    const products = await prisma.product.findMany({
+      where: where,
+      include: {
+        category: true,
+        reviews: true,
+        variants: { orderBy: { price: 'asc' } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 
-  const products = await prisma.product.findMany({
-        where:{isActive:true},
-
-    include: {
-      category: true,
-      reviews: true,
-      variants: { orderBy: { price: 'asc' } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  return products;
+    return products;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return [];
+  }
 }
+
 
 
 export async function getCategories() {
@@ -239,7 +247,6 @@ export async function deactivateProduct(productId: string) {
 
     revalidatePath('/admin/products');
     revalidatePath('/products');
-    revalidatePath('/'); // Revalidate home page if it shows products
     return { success: true, message: 'Product deactivated successfully.' };
   } catch (error) {
     console.error("Failed to deactivate product:", error);
