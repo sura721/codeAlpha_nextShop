@@ -7,6 +7,7 @@ import ProgressBarProvider from "@/components/ui/ProgressBarProvider";
 import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "@/contexts/cart-context";
+import AIHelper from "@/components/layout/AIHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             <Navbar/>
             <ProgressBarProvider>
               {children}
+              <AIHelper/>
             </ProgressBarProvider>
           </CartProvider>
           <Toaster position="top-right"/>

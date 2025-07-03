@@ -2877,6 +2877,7 @@ export namespace Prisma {
     slug: string | null
     description: string | null
     categoryId: string | null
+    isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2887,6 +2888,7 @@ export namespace Prisma {
     slug: string | null
     description: string | null
     categoryId: string | null
+    isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2897,6 +2899,7 @@ export namespace Prisma {
     slug: number
     description: number
     categoryId: number
+    isActive: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2909,6 +2912,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     categoryId?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2919,6 +2923,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     categoryId?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2929,6 +2934,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     categoryId?: true
+    isActive?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3012,6 +3018,7 @@ export namespace Prisma {
     slug: string
     description: string
     categoryId: string
+    isActive: boolean
     createdAt: Date
     updatedAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -3039,6 +3046,7 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     categoryId?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -3055,11 +3063,12 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     categoryId?: boolean
+    isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "categoryId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     variants?: boolean | Product$variantsArgs<ExtArgs>
@@ -3080,6 +3089,7 @@ export namespace Prisma {
       slug: string
       description: string
       categoryId: string
+      isActive: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["product"]>
@@ -3482,6 +3492,7 @@ export namespace Prisma {
     readonly slug: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly categoryId: FieldRef<"Product", 'String'>
+    readonly isActive: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
@@ -6117,6 +6128,7 @@ export namespace Prisma {
     shippingCost: number
     createdAt: number
     updatedAt: number
+    shippingAddress: number
     _all: number
   }
 
@@ -6167,6 +6179,7 @@ export namespace Prisma {
     shippingCost?: true
     createdAt?: true
     updatedAt?: true
+    shippingAddress?: true
     _all?: true
   }
 
@@ -6266,6 +6279,7 @@ export namespace Prisma {
     shippingCost: number | null
     createdAt: Date
     updatedAt: Date
+    shippingAddress: JsonValue | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -6297,6 +6311,7 @@ export namespace Prisma {
     shippingCost?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    shippingAddress?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -6314,9 +6329,10 @@ export namespace Prisma {
     shippingCost?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    shippingAddress?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "status" | "total" | "grandTotal" | "shippingMethod" | "shippingCost" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "status" | "total" | "grandTotal" | "shippingMethod" | "shippingCost" | "createdAt" | "updatedAt" | "shippingAddress", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -6339,6 +6355,7 @@ export namespace Prisma {
       shippingCost: number | null
       createdAt: Date
       updatedAt: Date
+      shippingAddress: Prisma.JsonValue | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -6742,6 +6759,7 @@ export namespace Prisma {
     readonly shippingCost: FieldRef<"Order", 'Float'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
+    readonly shippingAddress: FieldRef<"Order", 'Json'>
   }
     
 
@@ -11278,6 +11296,7 @@ export namespace Prisma {
     slug: 'slug',
     description: 'description',
     categoryId: 'categoryId',
+    isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11321,7 +11340,8 @@ export namespace Prisma {
     shippingMethod: 'shippingMethod',
     shippingCost: 'shippingCost',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    shippingAddress: 'shippingAddress'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -11470,6 +11490,13 @@ export namespace Prisma {
    */
   export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
   /**
    * Deep Input Types
    */
@@ -11555,6 +11582,7 @@ export namespace Prisma {
     slug?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     categoryId?: StringFilter<"Product"> | string
+    isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -11568,6 +11596,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     category?: CategoryOrderByWithRelationInput
@@ -11584,6 +11613,7 @@ export namespace Prisma {
     title?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     categoryId?: StringFilter<"Product"> | string
+    isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -11597,6 +11627,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -11613,6 +11644,7 @@ export namespace Prisma {
     slug?: StringWithAggregatesFilter<"Product"> | string
     description?: StringWithAggregatesFilter<"Product"> | string
     categoryId?: StringWithAggregatesFilter<"Product"> | string
+    isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -11774,6 +11806,7 @@ export namespace Prisma {
     shippingCost?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    shippingAddress?: JsonNullableFilter<"Order">
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
   }
@@ -11788,6 +11821,7 @@ export namespace Prisma {
     shippingCost?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    shippingAddress?: SortOrder
     user?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
   }
@@ -11805,6 +11839,7 @@ export namespace Prisma {
     shippingCost?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    shippingAddress?: JsonNullableFilter<"Order">
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
   }, "id">
@@ -11819,6 +11854,7 @@ export namespace Prisma {
     shippingCost?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    shippingAddress?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -11839,6 +11875,7 @@ export namespace Prisma {
     shippingCost?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    shippingAddress?: JsonNullableWithAggregatesFilter<"Order">
   }
 
   export type OrderItemWhereInput = {
@@ -12179,6 +12216,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -12192,6 +12230,7 @@ export namespace Prisma {
     slug: string
     description: string
     categoryId: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     variants?: ProductVariantUncheckedCreateNestedManyWithoutProductInput
@@ -12202,6 +12241,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -12214,6 +12254,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     variants?: ProductVariantUncheckedUpdateManyWithoutProductNestedInput
@@ -12226,6 +12267,7 @@ export namespace Prisma {
     slug: string
     description: string
     categoryId: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12234,6 +12276,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12243,6 +12286,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12406,6 +12450,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
     user: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
@@ -12420,6 +12465,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -12431,6 +12477,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
@@ -12444,6 +12491,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -12457,6 +12505,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -12467,6 +12516,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -12478,6 +12528,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
   }
 
   export type OrderItemCreateInput = {
@@ -12888,6 +12939,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12898,6 +12950,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12908,6 +12961,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     categoryId?: SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13116,6 +13170,18 @@ export namespace Prisma {
     notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    isSet?: boolean
+  }
 
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
@@ -13132,6 +13198,7 @@ export namespace Prisma {
     shippingCost?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    shippingAddress?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -13178,6 +13245,21 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type OrderScalarRelationFilter = {
@@ -14147,6 +14229,18 @@ export namespace Prisma {
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    isSet?: boolean
+  }
 
   export type OrderCreateWithoutUserInput = {
     id?: string
@@ -14157,6 +14251,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
 
@@ -14169,6 +14264,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -14256,6 +14352,7 @@ export namespace Prisma {
     shippingCost?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    shippingAddress?: JsonNullableFilter<"Order">
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutUserInput = {
@@ -14473,6 +14570,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -14485,6 +14583,7 @@ export namespace Prisma {
     slug: string
     description: string
     categoryId: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
@@ -14560,6 +14659,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -14571,6 +14671,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
@@ -14637,6 +14738,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     variants?: ProductVariantCreateNestedManyWithoutProductInput
@@ -14648,6 +14750,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     variants?: ProductVariantUncheckedCreateNestedManyWithoutProductInput
@@ -14688,6 +14791,7 @@ export namespace Prisma {
     slug?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     categoryId?: StringFilter<"Product"> | string
+    isActive?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
@@ -14806,6 +14910,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
     user: UserCreateNestedOneWithoutOrdersInput
   }
 
@@ -14819,6 +14924,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -14878,6 +14984,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
   }
 
@@ -14890,6 +14997,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
   }
 
   export type ProductVariantUpsertWithoutOrderItemsInput = {
@@ -14963,6 +15071,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -14975,6 +15084,7 @@ export namespace Prisma {
     slug: string
     description: string
     categoryId: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     variants?: ProductVariantUncheckedCreateNestedManyWithoutProductInput
@@ -15033,6 +15143,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -15044,6 +15155,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     variants?: ProductVariantUncheckedUpdateManyWithoutProductNestedInput
@@ -15271,6 +15383,7 @@ export namespace Prisma {
     shippingCost?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shippingAddress?: InputJsonValue | null
   }
 
   export type ReviewCreateManyUserInput = {
@@ -15290,6 +15403,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
 
@@ -15301,6 +15415,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -15312,6 +15427,7 @@ export namespace Prisma {
     shippingCost?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingAddress?: InputJsonValue | InputJsonValue | null
   }
 
   export type ReviewUpdateWithoutUserInput = {
@@ -15483,6 +15599,7 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15491,6 +15608,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     variants?: ProductVariantUpdateManyWithoutProductNestedInput
@@ -15501,6 +15619,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     variants?: ProductVariantUncheckedUpdateManyWithoutProductNestedInput
@@ -15511,6 +15630,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

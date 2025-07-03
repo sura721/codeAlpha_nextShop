@@ -16,6 +16,12 @@ export default function NavbarClient({ isAdmin }: NavbarProps) {
     { href: "/products", label: "Products" },
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact" },
+   { href: "/order", label: "my orders" },
+
+
+
+
+    
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
   ];
 
@@ -39,44 +45,7 @@ export default function NavbarClient({ isAdmin }: NavbarProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="relative">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-              <input
-                type="search"
-                placeholder="Search..."
-                className="w-full sm:w-40 md:w-56 pl-10 pr-3 py-2 text-sm border border-slate-300 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-
-            <ClerkLoading>
-              <Loader className="h-7 w-7 animate-spin text-slate-400" />
-            </ClerkLoading>
-
-            <ClerkLoaded>
-              <div className="hidden sm:flex items-center gap-4">
-                <Link href="/cart" className="p-2 text-slate-600 hover:text-purple-600 rounded-full hover:bg-slate-100">
-                   <ShoppingCart className="h-6 w-6" />
-                </Link>
-                <SignedIn>
-                  <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: "h-9 w-9" } }} />
-                </SignedIn>
-                <SignedOut>
-                  <SignInButton mode="modal">
-                    <button className="px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                </SignedOut>
-              </div>
-
-              <div className="sm:hidden flex items-center">
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-md text-slate-600 hover:bg-slate-100">
-                  {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </button>
-              </div>
-            </ClerkLoaded>
-          </div>
+       
         </div>
 
         {/* The mobile dropdown also renders from the same navLinks array */}

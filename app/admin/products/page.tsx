@@ -3,19 +3,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PlusCircle } from 'lucide-react';
 import prisma from '@/lib/prisma';
-import productActions
-// --- FIX 1: Update the data fetching function ---
-// We now include the variants, but only take the first one (ordered by price)
-// for efficiency on the list page.
+import ProductActions from '../ProductActions';
+
 async function getProducts() {
   const products = await prisma.product.findMany({
+    where:{isActive:true},
     include: {
       category: true,
       variants: {
         orderBy: {
           price: 'asc',
         },
-        take: 1, // Only fetch the primary variant for the list view
+        take: 1, 
       },
     },
     orderBy: {

@@ -39,3 +39,52 @@ export const cartWithDetailsValidator = Prisma.validator<Prisma.CartDefaultArgs>
 });
 
 export type CartWithDetails = Prisma.CartGetPayload<typeof cartWithDetailsValidator>;
+
+
+
+export type ShippingDataType = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  postalCode: string;
+};
+
+export type PaymentDataType = {
+  cardNumber: string;
+  cardName: string;
+  expiryDate: string;
+  cvc: string;
+};
+
+export type ShippingMethodType = {
+  id: string;
+  name: string;
+  price: number;
+  delivery: string;
+};
+
+export interface ShippingStepProps {
+  shippingData: ShippingDataType;
+  setShippingData: React.Dispatch<React.SetStateAction<ShippingDataType>>;
+  onSuccess: () => void;
+}
+
+export interface PaymentStepProps {
+  paymentData: PaymentDataType;
+  setPaymentData: React.Dispatch<React.SetStateAction<PaymentDataType>>;
+  shippingMethod: ShippingMethodType;
+  setShippingMethod: React.Dispatch<React.SetStateAction<ShippingMethodType>>;
+  onBack: () => void;
+  onSuccess: () => void;
+}
+
+export interface ReviewStepProps {
+  shippingData: ShippingDataType;
+  shippingMethod: ShippingMethodType;
+  paymentData: PaymentDataType;
+  onBack: () => void;
+  onPlaceOrder: () => void;
+  isPending: boolean;
+}

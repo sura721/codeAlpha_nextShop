@@ -30,6 +30,8 @@ model Product {
   categoryId  String           @db.ObjectId
   variants    ProductVariant[]
   reviews     Review[]
+  isActive    Boolean          @default(true)
+
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 }
@@ -73,6 +75,9 @@ model Order {
   shippingCost   Float?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+   shippingAddress Json?      
+
+  
 }
 
 enum OrderStatus {

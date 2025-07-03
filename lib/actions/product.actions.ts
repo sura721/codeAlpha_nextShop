@@ -100,20 +100,60 @@ export async function deleteProduct(productId: string) {
   }
 
   try {
+    // IMPORTANT: Deleting items from past orders is bad for record-keeping.
+    // We will first check if this product exists in any non-pending orders.
+    const existingOrderCount = await prisma.orderItem.count({
+      where: {
+        productVariant: {
+          productId: productId,
+        },
+        order: {
+          // You might want to be more strict, e.g., NOT IN [CANCELLED, PENDING]
+          // For now, we assume any order is a historical record.
+          id: { not: undefined } 
+        }
+      },
+    });
+
+    if (existingOrderCount > 0) {
+      return { 
+        success: false, 
+        message: 'Cannot delete product. It is part of one or more past orders. Consider deactivating it instead.' 
+      };
+    }
+    
+    // If we pass the check, we can proceed with deletion.
     await prisma.$transaction(async (tx) => {
+      // 1. Delete items from all user carts
+      await tx.cartItem.deleteMany({
+        where: {
+          productVariant: {
+            productId: productId,
+          },
+        },
+      });
+
+      // 2. Delete all product variants
+      // This will now succeed because cart items are gone, and we've checked for order items.
       await tx.productVariant.deleteMany({ where: { productId: productId } });
+
+      // 3. Delete all reviews
       await tx.review.deleteMany({ where: { productId: productId } });
+
+      // 4. Delete the product itself
       await tx.product.delete({ where: { id: productId } });
     });
 
     revalidatePath('/admin/products');
     revalidatePath('/products');
-    return { success: true, message: 'Product and its variants deleted successfully.' };
+    revalidatePath('/cart'); // Also revalidate the cart page
+    return { success: true, message: 'Product and its associations deleted successfully.' };
+
   } catch (error) {
+    console.error("Failed to delete product:", error); // Log the actual error for debugging
     return { success: false, message: 'Failed to delete product.' };
   }
 }
-
 export async function getProductBySlug(slug: string) {
   try {
     const product = await prisma.product.findUnique({
@@ -151,7 +191,8 @@ export async function getProducts({ query, category }: GetProductsParams) {
   }
 
   const products = await prisma.product.findMany({
-    where,
+        where:{isActive:true},
+
     include: {
       category: true,
       reviews: true,
@@ -178,3 +219,30 @@ export async function getCategories() {
 }
 
 
+
+
+
+
+export async function deactivateProduct(productId: string) {
+  if (!(await isAdmin())) {
+    return { success: false, message: 'Unauthorized.' };
+  }
+  if (!productId) {
+    throw new Error('Product ID is required.');
+  }
+
+  try {
+    await prisma.product.update({
+      where: { id: productId },
+      data: { isActive: false },
+    });
+
+    revalidatePath('/admin/products');
+    revalidatePath('/products');
+    revalidatePath('/'); // Revalidate home page if it shows products
+    return { success: true, message: 'Product deactivated successfully.' };
+  } catch (error) {
+    console.error("Failed to deactivate product:", error);
+    return { success: false, message: 'Failed to deactivate product.' };
+  }
+}
