@@ -5,16 +5,44 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import { motion, AnimatePresence, type Transition } from "framer-motion"
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from "lucide-react"
 
+// UPDATE #1: The front-end now uses "model" to match the backend.
 interface Message {
   id: string
   content: string
-  sender: "user" | "ai"
+  sender: "user" | "model" // Changed from "ai"
   timestamp: Date
 }
 
-interface AIChatWidgetProps {
-  onSendMessage?: (message: string) => Promise<string>
+interface HistoryMessage {
+  role: 'user' | 'model';
+  parts: { text: string }[];
 }
+
+interface AIChatWidgetProps {
+  onSendMessage?: (history: HistoryMessage[]) => Promise<string>
+}
+
+const renderMessageContent = (content: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = content.split(urlRegex);
+
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline hover:text-blue-600"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
 
 export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -23,8 +51,8 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
     {
       id: "1",
       content:
-        "Hi! I'm your AI shopping assistant. How can I help you today? I can help you find products, answer questions about orders, or provide recommendations!",
-      sender: "ai",
+        "Hi! I'm Nexi, your AI shopping assistant. How can I help you today? I can help you find products, answer questions, or just chat!",
+      sender: "model", // UPDATE #2: Changed from "ai"
       timestamp: new Date(),
     },
   ])
@@ -57,31 +85,39 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
-    setInputMessage("")
-    setIsTyping(true)
-    scrollToBottom()
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInputMessage("");
+    setIsTyping(true);
+    scrollToBottom();
+
+    // UPDATE #3: The mapping is now direct and type-safe. No more ternary.
+    const formattedHistory: HistoryMessage[] = updatedMessages.map(msg => ({
+      role: msg.sender, // This now perfectly matches 'user' | 'model'
+      parts: [{ text: msg.content }]
+    }));
 
     try {
-      const aiResponse = await onSendMessage(inputMessage)
+      const aiResponse = await onSendMessage(formattedHistory);
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
-        sender: "ai",
+        sender: "model", // UPDATE #4: Changed from "ai"
         timestamp: new Date(),
       }
-      setMessages((prev) => [...prev, aiMessage])
+      setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error sending message:", error)
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: "I'm sorry, I'm having trouble responding right now. Please try again in a moment.",
-        sender: "ai",
+        sender: "model", // UPDATE #5: Changed from "ai"
         timestamp: new Date(),
       }
-      setMessages((prev) => [...prev, errorMessage])
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
-      setIsTyping(false)
+      setIsTyping(false);
     }
   }
 
@@ -126,11 +162,11 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
           )}
         </AnimatePresence>
       </motion.button>
-
+      
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+             initial={{ opacity: 0, y: 100, scale: 0.8 }}
             animate={{
               opacity: 1,
               y: 0,
@@ -141,7 +177,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed bottom-20 right-4 sm:right-6 sm:bottom-24 z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col w-[calc(100%-2rem)] max-w-[380px]"
           >
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 flex items-center justify-between flex-shrink-0">
+             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                   <Bot className="h-5 w-5" />
@@ -182,7 +218,8 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                         className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                       >
                         <div className={`flex items-start space-x-2 max-w-[85%]`}>
-                          {message.sender === "ai" && (
+                          {/* UPDATE #6: This check is now for "model" to show the bot icon */}
+                          {message.sender === "model" && (
                             <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                               <Bot className="h-3 w-3 text-indigo-600" />
                             </div>
@@ -194,7 +231,9 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                                 : "bg-gray-100 text-gray-900 rounded-bl-md"
                             }`}
                           >
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                            <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                                {renderMessageContent(message.content)}
+                            </div>
                             <p
                               className={`text-xs mt-1 ${
                                 message.sender === "user" ? "text-indigo-200" : "text-gray-500"
@@ -211,8 +250,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                         </div>
                       </motion.div>
                     ))}
-
-                    {isTyping && (
+                      {isTyping && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -233,9 +271,9 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                       </motion.div>
                     )}
                     <div ref={messagesEndRef} />
-                  </div>
 
-                  <div className="border-t border-gray-200 p-4 flex-shrink-0 bg-white">
+                  </div>
+                   <div className="border-t border-gray-200 p-4 flex-shrink-0 bg-white">
                     <div className="flex items-center space-x-2">
                       <input
                         ref={inputRef}
