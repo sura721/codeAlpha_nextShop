@@ -262,3 +262,45 @@ export async function getCategories() {
     },
   });
 }
+
+
+
+
+export async function getAllProductsForSitemap() {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      }
+    });
+    return products;
+  } catch (error) {
+    console.error("Failed to fetch products for sitemap:", error);
+    return [];
+  }
+}
+
+export async function getAllCategoriesForSitemap() {
+  try {
+    const categories = await prisma.category.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      }
+    });
+    return categories;
+  } catch (error) {
+    console.error("Failed to fetch categories for sitemap:", error);
+    return [];
+  }
+}

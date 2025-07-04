@@ -4,7 +4,7 @@ import { getOrdersForUser } from '@/lib/actions/order.actions';
 import { Badge } from '@/components/ui/badge'; 
 
 export const metadata = {
-  title: 'My Orders - NextShop',
+  title: 'My Orders - pingShop',
 };
 
 export default async function MyOrdersPage() {

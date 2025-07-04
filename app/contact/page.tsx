@@ -6,7 +6,7 @@ import { Phone, Mail, Instagram, MessageSquare, Linkedin } from "lucide-react";
 export default function ContactPage() {
   return (
     <main className="max-w-md mx-auto px-4 py-8 space-y-6 text-center">
-      <h1 className="text-2xl font-bold">Contact NextStore 📞</h1>
+      <h1 className="text-2xl font-bold">Contact pingShop 📞</h1>
       <p className="text-gray-600">
         Have questions about your order, products, or need help?
         <br />

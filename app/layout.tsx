@@ -1,4 +1,5 @@
- 
+
+import type { Metadata } from 'next' 
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs';
@@ -10,9 +11,12 @@ import AIHelper from "@/components/layout/AIHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "nextShop",
-  description: "Your modern e-commerce solution.",
+export const metadata: Metadata = {
+  title: {
+    default: 'Ping Shop - Modern Apparel & Electronics',
+    template: '%s | Ping Shop',
+  },
+  description: "Discover the latest in modern apparel, electronics, and unique gadgets at next Shop. Quality products with fast, reliable shipping.",
 };
 
 export default function RootLayout({

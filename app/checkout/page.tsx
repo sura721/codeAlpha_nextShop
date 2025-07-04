@@ -3,7 +3,7 @@ import { getCart } from '@/lib/actions/cart.actions';
 import CheckoutClientPage from '@/components/checkout/CheckoutClientPage';
 
 export const metadata = {
-  title: 'Secure Checkout - NextShop',
+  title: 'Secure Checkout - pingShop',
 };
 
 export default async function CheckoutPage() {

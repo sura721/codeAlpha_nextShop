@@ -1,5 +1,5 @@
-# 🚀 NextShop: The AI-Powered E-Commerce Platform
-<p align="center"> <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"> <img alt="React" src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react"> <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript"> <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb"> <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge"> </p> <p align="center"> ✨ A modern, full-stack e-commerce platform powered by Next.js, featuring a conversational AI assistant designed to revolutionize the shopping experience. </p> <p align="center"> <a href="https://ping-nextshop.vercel.app" target="_blank"> <img src="https://img.shields.io/badge/🚀 View Live Demo-NextShop-blueviolet?style=for-the-badge"> </a> </p>
+# 🚀 pingShop: The AI-Powered E-Commerce Platform
+<p align="center"> <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"> <img alt="React" src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react"> <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript"> <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb"> <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge"> </p> <p align="center"> ✨ A modern, full-stack e-commerce platform powered by Next.js, featuring a conversational AI assistant designed to revolutionize the shopping experience. </p> <p align="center"> <a href="https://ping-pingShop.vercel.app" target="_blank"> <img src="https://img.shields.io/badge/🚀 View Live Demo-pingShop-blueviolet?style=for-the-badge"> </a> </p>
 ✨ Key Features
 ✅ Conversational AI Assistant
 
@@ -57,7 +57,7 @@ AI: GitHub Models / OpenAI GPT-4.1
 Deployment: Vercel (Recommended)
 
 🚀 Getting Started
-Follow these steps to set up and run NextShop locally:
+Follow these steps to set up and run pingShop locally:
 
 Prerequisites
 ✅ Node.js (v20 or later)
@@ -66,8 +66,8 @@ Prerequisites
 
 1️⃣ Clone the Repository
  
-git clone https://github.com/sura721/codeAlpha_nextShop.git
-cd codeAlpha_nextShop
+git clone https://github.com/sura721/codeAlpha_pingShop.git
+cd codeAlpha_pingShop
 2️⃣ Install Dependencies
  
 pnpm install
@@ -121,7 +121,7 @@ pnpm dev
 npm run dev
 
 🌐 Visit Live Site
-<p align="center"> <a href="https://ping-nextshop.vercel.app" target="_blank"> <img src="https://img.shields.io/badge/Click Here to View Live Demo-NextShop-blueviolet?style=for-the-badge&logo=vercel"> </a> </p>
+<p align="center"> <a href="https://ping-pingShop.vercel.app" target="_blank"> <img src="https://img.shields.io/badge/Click Here to View Live Demo-pingShop-blueviolet?style=for-the-badge&logo=vercel"> </a> </p>
 🙌 Contributions
 Pull requests and issues are welcome!
 Feel free to fork the project and contribute.

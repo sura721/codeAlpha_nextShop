@@ -4,7 +4,7 @@ import CartForm from '@/components/CartForm';
 import { getCart } from '@/lib/actions/cart.actions';
 
 export const metadata = {
-  title: 'Shopping Cart - NextShop',
+  title: 'Shopping Cart - pingShop',
 };
 
 export default async function CartPage() {

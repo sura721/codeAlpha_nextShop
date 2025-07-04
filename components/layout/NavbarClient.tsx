@@ -31,7 +31,7 @@ export default function NavbarClient({ isAdmin }: NavbarProps) {
           <div className="flex items-center gap-6">
             <Link href="/" className="flex-shrink-0" onClick={() => setIsMobileMenuOpen(false)}>
               <span className="text-xl font-bold text-white px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 transition-transform hover:scale-105">
-                nextShop
+                pingShop
               </span>
             </Link>
             <div className="hidden sm:flex sm:items-center sm:space-x-6">

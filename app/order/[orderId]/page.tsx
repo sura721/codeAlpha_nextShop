@@ -6,7 +6,7 @@ import OrderSuccessClient from '@/components/order/OrderSuccessClient';
  export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }) {
     const {orderId} = await params
   return {
-    title: `Order Details #${orderId} - NextShop`,
+    title: `Order Details #${orderId} - pingShop`,
   };
 }
 
