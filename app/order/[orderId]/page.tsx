@@ -1,27 +1,26 @@
- 
 import { redirect } from 'next/navigation';
 import { getOrderDetails, OrderWithDetails } from '@/lib/actions/order.actions';
 import OrderSuccessClient from '@/components/order/OrderSuccessClient';
- 
- export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }) {
+
+export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }) {
     const {orderId} = await params
   return {
     title: `Order Details #${orderId} - pingShop`,
   };
 }
 
- function OrderDetailsDisplay({ order }: { order: OrderWithDetails }) {
+function OrderDetailsDisplay({ order }: { order: OrderWithDetails }) {
   return (
     <>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           Order Details
         </h1>
-        <p className="text-base text-gray-500 mt-2">
-          Order ID: <span className="font-medium text-gray-900">{order.id}</span>
+        <p className="text-base text-gray-500 dark:text-gray-400 mt-2">
+          Order ID: <span className="font-medium text-gray-900 dark:text-gray-200">{order.id}</span>
         </p>
       </div>
-       <OrderSuccessClient order={order} />
+      <OrderSuccessClient order={order} />
     </>
   );
 }
@@ -42,8 +41,8 @@ export default async function OrderDetailsPage({
   if (!order) {
     return (
       <div className="text-center py-20">
-        <h1 className="text-2xl font-bold">Order Not Found</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Order Not Found</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
           We couldn&apos;t find this order, or you don&apos;t have permission to view it.
         </p>
       </div>
@@ -51,7 +50,7 @@ export default async function OrderDetailsPage({
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 dark:bg-gray-950">
       <OrderDetailsDisplay order={order} />
     </div>
   );

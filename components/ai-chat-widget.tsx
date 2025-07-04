@@ -172,7 +172,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
             }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 right-4 sm:right-6 sm:bottom-24 z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col w-[calc(100%-2rem)] max-w-[380px]"
+            className="fixed bottom-20 right-4 sm:right-6 sm:bottom-24 z-50 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col w-[calc(100%-2rem)] max-w-[380px]"
           >
              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center space-x-3">
@@ -215,27 +215,26 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                         className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                       >
                         <div className={`flex items-start space-x-2 max-w-[85%]`}>
-                          {/* UPDATE #6: This check is now for "model" to show the bot icon */}
                           {message.sender === "model" && (
                             <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                               <Bot className="h-3 w-3 text-indigo-600" />
                             </div>
                           )}
-                          <div
-                            className={`px-3 py-2 rounded-2xl ${
-                              message.sender === "user"
-                                ? "bg-indigo-600 text-white rounded-br-md"
-                                : "bg-gray-100 text-gray-900 rounded-bl-md"
-                            }`}
-                          >
+                        <div
+  className={`px-3 py-2 rounded-2xl ${
+    message.sender === "user"
+      ? "bg-indigo-600 text-white rounded-br-md"
+      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-bl-md"
+  }`}
+>
                             <div className="text-sm leading-relaxed whitespace-pre-wrap">
                                 {renderMessageContent(message.content)}
                             </div>
                             <p
-                              className={`text-xs mt-1 ${
-                                message.sender === "user" ? "text-indigo-200" : "text-gray-500"
-                              }`}
-                            >
+  className={`text-xs mt-1 ${
+    message.sender === "user" ? "text-indigo-200" : "text-gray-500 dark:text-gray-400"
+  }`}
+>
                               {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                             </p>
                           </div>
@@ -257,8 +256,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                             <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                               <Bot className="h-3 w-3 text-indigo-600" />
                             </div>
-                            <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-gray-100">
-                                <motion.div className="flex space-x-1" aria-label="AI is typing">
+<div className="px-4 py-3 rounded-2xl rounded-bl-md bg-gray-100 dark:bg-gray-700">                                <motion.div className="flex space-x-1" aria-label="AI is typing">
                                     <motion.span className="w-2 h-2 bg-gray-400 rounded-full" animate={typingAnimation} transition={{...typingTransition, delay: 0}} />
                                     <motion.span className="w-2 h-2 bg-gray-400 rounded-full" animate={typingAnimation} transition={{...typingTransition, delay: 0.2}} />
                                     <motion.span className="w-2 h-2 bg-gray-400 rounded-full" animate={typingAnimation} transition={{...typingTransition, delay: 0.4}} />
@@ -270,7 +268,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                     <div ref={messagesEndRef} />
 
                   </div>
-                   <div className="border-t border-gray-200 p-4 flex-shrink-0 bg-white">
+                   <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0 bg-white dark:bg-gray-900">
                     <div className="flex items-center space-x-2">
                       <input
                         ref={inputRef}
@@ -280,7 +278,7 @@ export default function AIChatWidget({ onSendMessage }: AIChatWidgetProps) {
                         onKeyPress={handleKeyPress}
                         placeholder="Type your message..."
                         disabled={isTyping}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 disabled:opacity-50"
+                      className="flex-1 px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 disabled:opacity-50"
                       />
                       <motion.button
                         whileHover={{ scale: 1.1 }}

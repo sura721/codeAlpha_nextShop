@@ -1,13 +1,13 @@
 "use client"
 
- import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles } from "lucide-react"
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-       <div className="absolute inset-0">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-purple-950">
+      <div className="absolute inset-0">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -18,7 +18,7 @@ export default function HeroSection() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-indigo-200 to-purple-200 rounded-full opacity-20 blur-3xl"
+          className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-indigo-200 to-purple-200 dark:from-indigo-900 dark:to-purple-900 rounded-full opacity-20 dark:opacity-30 blur-3xl"
         />
         <motion.div
           animate={{
@@ -30,7 +30,7 @@ export default function HeroSection() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 rounded-full opacity-20 dark:opacity-30 blur-3xl"
         />
       </div>
 
@@ -41,84 +41,79 @@ export default function HeroSection() {
           transition={{ duration: 0.8 }}
           className="space-y-8"
         >
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center space-x-2 bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full text-sm font-medium"
+            className="inline-flex items-center space-x-2 bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 px-4 py-2 rounded-full text-sm font-medium"
           >
             <Sparkles className="h-4 w-4" />
             <span>Premium Quality Products</span>
           </motion.div>
 
-          {/* Main Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight"
+            className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-tight"
           >
             Discover
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"
+              className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
             >
               Luxury
             </motion.span>
             Redefined
           </motion.h1>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
           >
             Experience the finest collection of premium products, carefully curated for those who appreciate excellence
             and sophistication.
           </motion.p>
 
-       <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.8, duration: 0.8 }}
-  className="flex flex-col sm:flex-row gap-3 justify-center items-center"
->
-  <Link href="/products">
-    <motion.button
-      whileHover={{ scale: 1.05, y: -2 }}
-      whileTap={{ scale: 0.95 }}
-      className="group bg-indigo-600 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center space-x-1 sm:space-x-2"
-    >
-      <span>Shop Collection</span>
-      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-    </motion.button>
-  </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center items-center"
+          >
+            <Link href="/products">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="group bg-indigo-600 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center space-x-1 sm:space-x-2"
+              >
+                <span>Shop Collection</span>
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </motion.button>
+            </Link>
 
-  <Link href="/products">
-    <motion.button
-      whileHover={{ scale: 1.05, y: -2 }}
-      whileTap={{ scale: 0.95 }}
-      className="border-2 border-gray-300 text-gray-700 px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-all duration-300"
-    >
-      Learn More
-    </motion.button>
-  </Link>
-</motion.div>
-
+            <Link href="/products">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:border-indigo-600 hover:text-indigo-600 dark:hover:border-indigo-400 dark:hover:text-indigo-400 transition-all duration-300"
+              >
+                Learn More
+              </motion.button>
+            </Link>
+          </motion.div>
         </motion.div>
 
-        {/* Floating Elements */}
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
           className="absolute top-20 left-10 hidden lg:block"
         >
-          <div className="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-2xl opacity-60 blur-sm" />
+          <div className="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-400 dark:from-indigo-800 dark:to-purple-800 rounded-2xl opacity-60 blur-sm" />
         </motion.div>
 
         <motion.div
@@ -126,7 +121,7 @@ export default function HeroSection() {
           transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
           className="absolute bottom-20 right-10 hidden lg:block"
         >
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-60 blur-sm" />
+          <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-800 dark:to-pink-800 rounded-full opacity-60 blur-sm" />
         </motion.div>
       </div>
     </section>

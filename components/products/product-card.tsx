@@ -3,17 +3,16 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ShoppingCart, Heart } from "lucide-react"
-import type { ProductWithDetails } from "@/lib/types"  
+import type { ProductWithDetails } from "@/lib/types"
 import { useCart } from "@/contexts/cart-context"
 import ToastNotification from "../toast-notification"
 
 interface ProductCardProps {
-  product: ProductWithDetails 
+  product: ProductWithDetails
   index?: number
 }
 
@@ -21,10 +20,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { addItem, isCartLoading } = useCart()
   const [showToast, setShowToast] = useState(false)
   const router = useRouter()
- 
+
   const primaryVariant = product.variants && product.variants[0];
 
-   if (!primaryVariant) {
+  if (!primaryVariant) {
     return null;
   }
 
@@ -33,7 +32,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.stopPropagation()
     if (isCartLoading) return
 
-     await addItem(primaryVariant.id, 1)
+    await addItem(primaryVariant.id, 1)
     setShowToast(true)
 
     setTimeout(() => {
@@ -47,18 +46,17 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.6 }}
       whileHover={{ y: -8 }}
-      className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+      className="group bg-white dark:bg-slate-800/50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-transparent dark:border-slate-800"
     >
       <Link href={`/products/${product.slug}`}>
         <div className="relative overflow-hidden">
           <Image
-             src={primaryVariant.image || "/placeholder.svg"}
+            src={primaryVariant.image || "/placeholder.svg"}
             alt={product.title}
             width={400}
             height={300}
             className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
           />
-
           <motion.div
             initial={{ opacity: 0 }}
             whileHover={{ opacity: 1 }}
@@ -69,38 +67,31 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               whileTap={{ scale: 0.9 }}
               onClick={handleAddToCart}
               disabled={isCartLoading}
-              className="bg-white text-gray-900 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
+              className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
             >
               <ShoppingCart className="h-5 w-5" />
             </motion.button>
           </motion.div>
-
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-all duration-300"
+            className="absolute top-4 right-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-2 rounded-full hover:bg-white dark:hover:bg-gray-800 transition-all duration-300"
           >
-            <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
+            <Heart className="h-4 w-4 text-gray-600 dark:text-gray-300 hover:text-red-500" />
           </motion.button>
         </div>
-
         <div className="p-6">
           <div className="flex items-start justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
               {product.title}
             </h3>
-            <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{product.category.name}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">{product.category.name}</span>
           </div>
-
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
-
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">{product.description}</p>
           <div className="flex items-center justify-between">
-            {/* Using price from the primary variant */}
-            <span className="text-2xl font-bold text-gray-900">${(primaryVariant.offerPrice || primaryVariant.price).toFixed(2)}</span>
-
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">${(primaryVariant.offerPrice || primaryVariant.price).toFixed(2)}</span>
             <div className="flex items-center space-x-2">
-              {/* Using stock from the primary variant */}
-              <span className="text-sm text-gray-500">{primaryVariant.inStock} in stock</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{primaryVariant.inStock} in stock</span>
               <div
                 className={`w-2 h-2 rounded-full ${primaryVariant.inStock > 10 ? "bg-green-500" : primaryVariant.inStock > 0 ? "bg-yellow-500" : "bg-red-500"}`}
               />

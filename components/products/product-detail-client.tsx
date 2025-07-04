@@ -9,7 +9,7 @@ import { ProductWithDetails } from "@/lib/types"
 import { useCart } from "@/contexts/cart-context"
 import { clsx } from "clsx"
 
- const getSwatchColor = (variantName: string): string => {
+const getSwatchColor = (variantName: string): string => {
   const name = variantName.toLowerCase();
   if (name.includes("black")) return "bg-black";
   if (name.includes("white")) return "bg-white border-gray-300";
@@ -25,10 +25,10 @@ import { clsx } from "clsx"
 const AccordionItem = ({ title, children }: { title: string, children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 dark:border-gray-700">
       <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 text-left">
-        <span className="font-medium text-gray-800">{title}</span>
-        <ChevronDown className={clsx("h-5 w-5 text-gray-500 transition-transform", { "rotate-180": isOpen })} />
+        <span className="font-medium text-gray-800 dark:text-gray-200">{title}</span>
+        <ChevronDown className={clsx("h-5 w-5 text-gray-500 dark:text-gray-400 transition-transform", { "rotate-180": isOpen })} />
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -36,7 +36,7 @@ const AccordionItem = ({ title, children }: { title: string, children: React.Rea
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="pb-4 text-gray-600 prose prose-sm max-w-none"
+            className="pb-4 text-gray-600 dark:text-gray-300 prose prose-sm max-w-none dark:prose-invert"
           >
             {children}
           </motion.div>
@@ -65,7 +65,7 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
   if (!product?.variants || product.variants.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl text-gray-500">Product not available.</p>
+        <p className="text-xl text-gray-500 dark:text-gray-400">Product not available.</p>
       </div>
     );
   }
@@ -87,17 +87,12 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
   const hasOffer = selectedVariant.offerPrice && selectedVariant.offerPrice < selectedVariant.price;
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16">
-          
-          {/* --- Image Gallery (Left Column) --- */}
+
           <div className="lg:sticky lg:top-24 self-start space-y-4">
-            {/* --- THE CORE FIX --- 
-                Using `aspect-square` forces the container into a predictable shape.
-                This prevents the image from growing too tall and overwhelming the viewport.
-            */}
-            <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square">
+            <div className="relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 aspect-square">
               <AnimatePresence>
                 <motion.div
                   key={selectedVariant.id}
@@ -117,14 +112,13 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
               </AnimatePresence>
             </div>
 
-            {/* Thumbnails */}
             <div className="grid grid-cols-5 gap-4">
-               {product.variants.map((variant, index) => (
+              {product.variants.map((variant, index) => (
                 <button
                   key={variant.id}
                   onClick={() => setSelectedVariantIndex(index)}
                   className={clsx(
-                    "relative aspect-square rounded-lg overflow-hidden transition-all duration-200 ring-offset-2 ring-offset-white",
+                    "relative aspect-square rounded-lg overflow-hidden transition-all duration-200 ring-offset-2 ring-offset-white dark:ring-offset-gray-950",
                     {
                       "ring-2 ring-indigo-500": selectedVariantIndex === index,
                       "hover:opacity-80": selectedVariantIndex !== index,
@@ -142,31 +136,29 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
             </div>
           </div>
 
-          {/* --- Product Info (Right Column) --- */}
           <div className="mt-8 lg:mt-0 space-y-6">
             <div>
-              <Link href={`/products?category=${product.category.slug}`} className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+              <Link href={`/products?category=${product.category.slug}`} className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
                 {product.category?.name || "Uncategorized"}
               </Link>
-              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-gray-900 mt-2">{product.title}</h1>
+              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mt-2">{product.title}</h1>
               <div className="mt-3 flex items-center gap-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" />
+                    <Star key={i} className={`h-5 w-5 ${i < Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} fill="currentColor" />
                   ))}
                 </div>
-                <a href="#reviews" className="text-sm text-gray-600 hover:underline">({reviewCount} customer reviews)</a>
+                <a href="#reviews" className="text-sm text-gray-600 dark:text-gray-400 hover:underline">({reviewCount} customer reviews)</a>
               </div>
             </div>
 
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-gray-900">${displayPrice.toFixed(2)}</span>
-              {hasOffer && <span className="text-xl text-gray-400 line-through">${selectedVariant.price.toFixed(2)}</span>}
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">${displayPrice.toFixed(2)}</span>
+              {hasOffer && <span className="text-xl text-gray-400 dark:text-gray-500 line-through">${selectedVariant.price.toFixed(2)}</span>}
             </div>
 
-            {/* --- Variant Selection (Circular Swatches) --- */}
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-gray-900">Color: <span className="font-normal text-gray-600">{selectedVariant.name}</span></h3>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Color: <span className="font-normal text-gray-600 dark:text-gray-300">{selectedVariant.name}</span></h3>
               <div className="flex flex-wrap gap-3">
                 {product.variants.map((variant, index) => (
                   <button
@@ -174,10 +166,10 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
                     onClick={() => setSelectedVariantIndex(index)}
                     disabled={variant.inStock === 0}
                     className={clsx(
-                      "relative w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center ring-offset-2 ring-offset-white",
+                      "relative w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center ring-offset-2 ring-offset-white dark:ring-offset-gray-950",
                       {
                         "ring-2 ring-indigo-500": selectedVariantIndex === index,
-                        "hover:ring-2 hover:ring-gray-400": variant.inStock > 0,
+                        "hover:ring-2 hover:ring-gray-400 dark:hover:ring-gray-500": variant.inStock > 0,
                         "cursor-not-allowed": variant.inStock === 0,
                       }
                     )}
@@ -190,14 +182,13 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
               </div>
             </div>
 
-            {/* --- Quantity & Add to Cart --- */}
             <div className="space-y-4 pt-4">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center border border-gray-300 rounded-lg">
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-l-lg transition">-</button>
-                    <span className="w-10 text-center font-medium">{quantity}</span>
-                    <button onClick={() => setQuantity(Math.min(selectedVariant.inStock, quantity + 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-r-lg transition">+</button>
+                  <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg">
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-l-lg transition">-</button>
+                    <span className="w-10 text-center font-medium text-gray-900 dark:text-white">{quantity}</span>
+                    <button onClick={() => setQuantity(Math.min(selectedVariant.inStock, quantity + 1))} className="w-10 h-10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-r-lg transition">+</button>
                   </div>
                 </div>
                 <motion.button
@@ -228,7 +219,6 @@ export default function ProductDetailClient({ product }: { product: ProductWithD
               </div>
             </div>
 
-            {/* --- Accordions for Details --- */}
             <div className="pt-6">
               <AccordionItem title="Description">
                 <p>{product.description}</p>

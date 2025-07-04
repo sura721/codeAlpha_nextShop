@@ -14,7 +14,7 @@ export default async function CheckoutPage() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 dark:bg-gray-950">
       <CheckoutClientPage cart={cart} />
     </div>
   );
