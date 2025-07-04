@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { CartProvider } from "@/contexts/cart-context";
 import AIHelper from "@/components/layout/AIHelper";
 import { ThemeProvider } from '../components/theme-provider';
+import Footer from '@/components/layout/Footer';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,29 +20,30 @@ export const metadata: Metadata = {
   description: "Discover the latest in modern apparel, electronics, and unique gadgets at Ping Shop. Quality products with fast, reliable shipping.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body>
-         <ThemeProvider
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            <CartProvider>
-              <Navbar />
-              <ProgressBarProvider>
-                {children}
-                <AIHelper />
-              </ProgressBarProvider>
-            </CartProvider>
-            <Toaster position="top-right" />
+            <ProgressBarProvider>
+              <CartProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Navbar />
+                  <main className="flex-grow">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
+                <AIHelper /> 
+              </CartProvider>
+              <Toaster position="top-right" />
+            </ProgressBarProvider>
           </ThemeProvider>
         </body>
       </html>
