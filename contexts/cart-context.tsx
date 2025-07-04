@@ -38,7 +38,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const initialCart = await getCart();
         updateCartState(initialCart);
       } catch (error) {
-         toast.error("Could not load your cart.");
+         console.log("Could not load your cart.");
       } finally {
         setIsInitializing(false);
       }
