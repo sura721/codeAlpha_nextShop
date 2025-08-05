@@ -50,15 +50,15 @@ export default function NavbarClient({ isAdmin }: NavbarProps) {
             <ClerkLoaded>
               <div className="hidden sm:flex items-center gap-4">
                 <ThemeToggler />
-                <Link href="/cart" className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-                   <ShoppingCart className="h-6 w-6" />
-                   {cartCount > 0 && (
-                     <span className="absolute top-0 right-0 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full">
-                       {cartCount}
-                     </span>
-                   )}
-                </Link>
                 <SignedIn>
+                   <Link href="/cart" className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+                     <ShoppingCart className="h-6 w-6" />
+                     {cartCount > 0 && (
+                       <span className="absolute top-0 right-0 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full">
+                         {cartCount}
+                       </span>
+                     )}
+                   </Link>
                   <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: "h-9 w-9" } }} />
                 </SignedIn>
                 <SignedOut>
@@ -71,14 +71,16 @@ export default function NavbarClient({ isAdmin }: NavbarProps) {
               </div>
 
               <div className="sm:hidden flex items-center">
-                <Link href="/cart" className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-                   <ShoppingCart className="h-6 w-6" />
-                   {cartCount > 0 && (
-                     <span className="absolute top-0 right-0 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full">
-                       {cartCount}
-                     </span>
-                   )}
-                </Link>
+                 <SignedIn>
+                    <Link href="/cart" className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+                       <ShoppingCart className="h-6 w-6" />
+                       {cartCount > 0 && (
+                         <span className="absolute top-0 right-0 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full">
+                           {cartCount}
+                         </span>
+                       )}
+                    </Link>
+                </SignedIn>
                 <ThemeToggler/>
                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
                   {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

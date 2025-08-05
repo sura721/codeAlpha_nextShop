@@ -98,12 +98,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             </div>
           </div>
         </div>
-        <ToastNotification
-          show={showToast}
-          message={`${product.title} added to cart!`}
-          onClose={() => setShowToast(false)}
-          type="success"
-        />
+        
       </Link>
     </motion.div>
   )

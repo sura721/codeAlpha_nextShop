@@ -1,6 +1,9 @@
 // context/CartContext.tsx
 
 'use client';
+ 
+import { SignInButton } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
 
 import { createContext, useContext, useState, useTransition, useEffect, ReactNode, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
@@ -46,17 +49,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
     loadInitialCart();
   }, [updateCartState]);
 
-  const addItem = async (productVariantId: string, quantity: number) => {
-    startTransition(async () => {
-      const result = await addCartItem(productVariantId, quantity);
-      if (result.success && result.cart) {
-        toast.success(result.message || 'Item added!');
-        updateCartState(result.cart);
-      } else {
-        toast.error('Failed to add item.');
-      }
-    });
-  };
+ 
+const addItem = async (productVariantId: string, quantity: number) => {
+  startTransition(async () => {
+    const result = await addCartItem(productVariantId, quantity);
+    if (result.success && result.cart) {
+      toast.success(result.message || 'Item added!');
+      updateCartState(result.cart);
+    } else {
+      toast.error(
+        (t) => (
+          <div className="flex w-full items-center justify-between">
+            <span className="text-sm">Please sign in to add items.</span>
+            <SignInButton mode="modal">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Sign In
+              </Button>
+            </SignInButton>
+          </div>
+        ),
+        {
+          duration: 5000,
+        }
+      );
+    }
+  });
+};
 
   const updateItemQuantity = async (itemId: string, quantity: number) => {
     startTransition(async () => {
