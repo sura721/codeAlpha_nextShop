@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/4771629a-a1f5-4ac4-8265-3255db140bfb)
+
+
 # 🚀 pingShop: The AI-Powered E-Commerce Platform
 
 <p align="center">
