@@ -4,11 +4,14 @@ export const inngest = new Inngest({ id: "pingShop" });
 
 
  
-
-export const deleteUserOnClerkDelete = inngest.createFunction(
-  { id: "delete-user-on-clerk-delete", name: "Delete User on Clerk Delete" },
-  { event: "clerk/user.deleted" },
+inngest.createFunction(
+  { 
+    id: "delete-user-on-clerk-delete", 
+    name: "Delete User on Clerk Delete",
+    triggers: [{ event: "clerk/user.deleted" }] 
+  },
   async ({ event, step }) => {
+    // ...
     const { clerkId } = event.data;
 
     const deletedUser = await step.run("delete-user-from-db", async () => {
@@ -30,9 +33,13 @@ export const deleteUserOnClerkDelete = inngest.createFunction(
 
 
 
- export const syncUserOnCreate = inngest.createFunction(
-  { id: "sync-user-on-create", name: "Sync User on Create" },
-  { event: "clerk/user.created" },
+ 
+inngest.createFunction(
+  { 
+    id: "sync-user-on-create", 
+    name: "Sync User on Create",
+    triggers: [{ event: "clerk/user.created" }] 
+  },
   async ({ event, step }) => {
  
     const clerkId = event.data?.id ?? "";
