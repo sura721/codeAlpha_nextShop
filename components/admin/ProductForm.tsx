@@ -45,7 +45,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState(true);
 
-  useEffect(() => {
+useEffect(() => {
     if (isEditing && product) {
       setTitle(product.title);
       setDescription(product.description);
@@ -53,14 +53,17 @@ export default function ProductForm({ product }: ProductFormProps) {
       setOfferPrice(product.offerPrice ? String(product.offerPrice) : '');
       setInStock(String(product.inStock));
       setCategoryId(product.categoryId);
-      const previews = [...imagePreviews];
-      for (let i = 0; i < product.images.length; i++) {
-        if (i < 4) previews[i] = product.images[i];
-      }
-      setImagePreviews(previews);
+      
+      // Fixed: Use functional update to avoid missing dependency warning
+      setImagePreviews((prev) => {
+        const previews = [...prev];
+        for (let i = 0; i < product.images.length; i++) {
+          if (i < 4) previews[i] = product.images[i];
+        }
+        return previews;
+      });
     }
-  }, [product, isEditing]);
-
+  }, [product, isEditing]);  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
